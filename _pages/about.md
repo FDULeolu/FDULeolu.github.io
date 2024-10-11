@@ -24,3 +24,9 @@ Research experience
   - Working on some interesting topics in machine learning and statistics like In-Context Learning, Benign overfitting and Causal discovery.
 
 
+Notes
+======
+I'm sharing some personal reading notes at Zhihu. If you find any errors in it, please contact me immediately!
+- [Understanding Machine Learning: From Theory to Algorithms](https://www.zhihu.com/column/c_1779928788929331200)
+
+
