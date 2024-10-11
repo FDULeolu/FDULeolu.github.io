@@ -20,7 +20,7 @@ Education
 Research experience
 ======
 - April 2024 - Present: Research Assistant
-  - Supervised by Prof. [Jiaye Teng](https://www.tengjiaye.com/index2.html) @ SUFE
+  - Supervised by Prof. [Jiaye Teng](https://www.tengjiaye.com/) @ SUFE
   - Working on some interesting topics in machine learning and statistics like In-Context Learning, Benign overfitting and Causal discovery.
 
 
