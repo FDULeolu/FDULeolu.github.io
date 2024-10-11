@@ -7,9 +7,9 @@ redirect_from:
   - /about.html
 ---
 
-I'm an undergraduate majoring in Statistics at Fudan University. I'm interested in machine learning theory and trying to explain some interesting phenomena in deep learning mathematically.
+I am an undergraduate majoring in Statistics at Fudan University in Shanghai, China, with a keen interest in machine learning theory. My research focus is on providing mathematical explanations for intriguing phenomena in deep learning. While modern machine learning systems are highly complex and often rely on intuition and experimental approaches, I believe that rigorous theoretical analysis can offer valuable insights and have the potential to guide the design and optimization of neural networks, driving the advancement of high-performance artificial intelligence.
 
-Modern machine learning systems are very complex and difficult to explain mathematically, so the current research is dominated by intuition and experiments, but I believe that theoretical explanations of today's machine learning systems can effectively guide the construction and training of neural networks and promote the development of high-performance artificial intelligence. If you share the same interest with me, feel free to contact me!
+If you share a similar passion for understanding the theoretical foundations of machine learning, feel free to reach out and connect with me!
 
 
 
