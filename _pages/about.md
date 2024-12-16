@@ -11,7 +11,10 @@ I am an undergraduate majoring in Statistics at Fudan University in Shanghai, Ch
 
 If you share a similar passion for understanding the theoretical foundations of machine learning, feel free to reach out and connect with me!
 
-
+News
+======
+- **Dec, 2024** I'm going to visit [Yang Yuan](https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html) @ THU IIIS !
+- **Apr, 2024** Start my research supervised by [Jiaye Teng](https://www.tengjiaye.com/) !
 
 Education
 ======
