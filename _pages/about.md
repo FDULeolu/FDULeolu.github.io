@@ -22,9 +22,11 @@ Education
 
 Research experience
 ======
-- April 2024 - Present: Research Assistant
-  - Supervised by Prof. [Jiaye Teng](https://www.tengjiaye.com/) @ SUFE
-  - Working on some interesting topics in machine learning and statistics like In-Context Learning, Benign overfitting and Causal discovery.
+- January 2025 - Feburary 2025: Visiting Student, Supervised by Prof. [Yang Yuan](https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html) @ THU IIIS
+- April 2024 - Present: Research Assistant, Supervised by Prof. [Jiaye Teng](https://www.tengjiaye.com/) @ SUFE
+  - Try to find the mathemetical explanation of in-context learning of tranformer under next token prediction setting;
+  - Investigate the benign overfitting in neural network under mild overparameterized regime;
+  - Extend the application of conformal prediction in causal inference.
 
 
 Notes
