@@ -22,6 +22,7 @@ Education
 
 Research experience
 ======
+- May 2025 - Present: Research Intern @ Big AI Dream Lab, Shanghai AI Lab. Supervised by [Jie Fu](https://bigaidream.github.io/)
 - January 2025 - Feburary 2025: Visiting Student, Supervised by Prof. [Yang Yuan](https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html) @ THU IIIS
 - April 2024 - Present: Research Assistant, Supervised by Prof. [Jiaye Teng](https://www.tengjiaye.com/) @ SUFE
   - Try to find the mathemetical explanation of in-context learning of tranformer under next token prediction setting;
