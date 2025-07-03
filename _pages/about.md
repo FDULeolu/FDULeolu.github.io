@@ -13,6 +13,7 @@ If you share a similar passion for understanding the theoretical foundations of 
 
 News
 ======
+- **June, 2025** One paper was accepted by ICML 2025 Workshop!
 - **Dec, 2024** I'm going to visit [Yang Yuan](https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html) @ THU IIIS !
 - **Apr, 2024** Start my research supervised by [Jiaye Teng](https://www.tengjiaye.com/) !
 
