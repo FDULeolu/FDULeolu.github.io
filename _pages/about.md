@@ -9,7 +9,9 @@ redirect_from:
 
 I am an undergraduate majoring in Statistics at Fudan University in Shanghai, China, with a keen interest in machine learning theory. My research focus is on providing mathematical explanations for intriguing phenomena in deep learning. While modern machine learning systems are highly complex and often rely on intuition and experimental approaches, I believe that rigorous theoretical analysis can offer valuable insights and have the potential to guide the design and optimization of neural networks, driving the advancement of high-performance artificial intelligence.
 
-If you share a similar passion for understanding the theoretical foundations of machine learning, feel free to reach out and connect with me!
+Lately, I’ve been thinking deeply about the path toward achieving AGI. I have many ideas that I find both challenging and exciting. Rather than building a tool that merely holds all the world’s knowledge, I’m more interested in creating something akin to a truly intelligent infant—something that can grow, learn, and reason. I believe we are standing at a crossroads between tools and real intelligence, and I’m eager to contribute to this grand vision in any way I can.
+
+If you share a similar passion with me, feel free to reach out and connect with me!
 
 News
 ======
