@@ -16,7 +16,7 @@ If you share a similar passion with me, feel free to reach out and connect with 
 News
 ======
 - **Oct, 2025** I am very honored to have received the **National Scholarship**!
-- **Sep, 2025** One paper about the [**interpretability about conformal prediction**](https://arxiv.org/abs/2509.22529) is submitted on arxiv!
+- **Sep, 2025** Our new preprint on the [**interpretability of conformal prediction**](https://arxiv.org/abs/2509.22529) is now available on arXiv.
 - **June, 2025** One paper was accepted by ICML 2025 Workshop!
 - **Dec, 2024** I'm going to visit [Yang Yuan](https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html) @ THU IIIS!
 - **Apr, 2024** Start my research supervised by [Jiaye Teng](https://www.tengjiaye.com/)!
