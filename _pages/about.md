@@ -7,7 +7,7 @@ redirect_from:
   - /about.html
 ---
 
-I am a third-year undergraduate at Fudan University, majoring in Statistics. My research interests lie in machine learning, reinforcement learning, and the theory of foundation models, with a particular focus on LLM reinforcement learning and agentic systems. Broadly, I am interested in how models can learn to reason, adapt, and improve through interaction and feedback. In the long run, I hope to contribute to the development of general-purpose reasoning models capable of open-ended self-improvement.
+I am a third-year undergraduate at Fudan University, majoring in Statistics. My earlier research was at the intersection of statistics and machine learning, where I was interested in developing new methodologies for scientific discovery by combining statistical theory with machine learning. More recently, my interests have shifted toward machine learning, reinforcement learning, and the theory of foundation models, with a particular focus on LLM reinforcement learning and agentic systems. Broadly, I am interested in how models can learn to reason, adapt, and improve through interaction and feedback. In the long run, I hope to contribute to the development of general-purpose reasoning models capable of open-ended self-improvement.
 
 
 I am currently seeking for a PhD position in Fall 2027. Please feel free to send me an email if you are interested in my research and background.
