@@ -232,7 +232,7 @@ body.theme-claude .site-email {
   font-size: 13px;
   color: var(--claude-secondary);
   font-family: "Ubuntu Mono", "SF Mono", monospace;
-  margin: 0 0 24px;
+  margin: 0 0 20px;
   word-break: break-all;
 }
 
@@ -368,6 +368,10 @@ body.theme-claude .card {
   box-shadow: none;
 }
 
+body.theme-claude .is-hidden {
+  display: none !important;
+}
+
 /* --- Timeline items (Education & Experience) --- */
 body.theme-claude .timeline-item {
   position: relative;
@@ -417,6 +421,57 @@ body.theme-claude .institution-logo {
   flex-shrink: 0;
 }
 
+body.theme-claude .institution-seal {
+  border-radius: 50%;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(61, 57, 41, 0.08);
+  border: 1px solid rgba(194, 113, 79, 0.14);
+}
+
+body.theme-claude .institution-shield {
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+body.theme-claude .institution-wide-logo {
+  width: 56px;
+  height: 52px;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+body.theme-claude .institution-adaptive-logo {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+body.theme-claude .institution-threshold-logo {
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  border-radius: 0;
+}
+
+html[data-theme="dark"] body.theme-claude .institution-wide-logo {
+  filter: brightness(0) invert(1);
+}
+
+html[data-theme="dark"] body.theme-claude .institution-adaptive-logo {
+  filter: brightness(0) invert(1);
+}
+
+body.theme-claude .experience-item.no-logo {
+  display: block;
+}
+
+body.theme-claude .experience-item.no-logo .experience-content {
+  margin-left: 0;
+}
+
 /* 移除深色模式下的 Logo 滤镜，保持彩色 */
 @media (prefers-color-scheme: dark) {
   body.theme-claude .institution-logo {
@@ -448,10 +503,59 @@ body.theme-claude .exp-period {
   font-weight: 500;
 }
 
+body.theme-claude .teaching-course {
+  display: inline-block;
+  margin: 0 0 8px !important;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #5b4a37, var(--claude-accent));
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.2;
+  box-shadow: 0 10px 20px rgba(194, 113, 79, 0.16);
+}
+
 /* --- Project card --- */
 body.theme-claude .project-card {
   font-size: 15px;
   line-height: 1.6;
+}
+
+/* --- News --- */
+body.theme-claude .news-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+body.theme-claude .news-item {
+  padding-left: 16px;
+  border-left: 3px solid var(--claude-accent);
+}
+
+body.theme-claude .news-item p {
+  margin: 0;
+}
+
+body.theme-claude .news-date {
+  margin-bottom: 6px !important;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--claude-accent);
+}
+
+body.theme-claude .news-text {
+  font-size: 15px;
+  color: var(--claude-text);
+}
+
+body.theme-claude .section-note {
+  font-size: 14px;
+  color: var(--claude-secondary);
+  margin-bottom: 14px;
 }
 
 /* --- Publications --- */
@@ -538,6 +642,13 @@ body.theme-claude .award-text a {
   color: var(--claude-accent);
 }
 
+body.theme-claude .award-meta {
+  display: inline-block;
+  margin-left: 6px;
+  color: var(--claude-secondary);
+  font-size: 13px;
+}
+
 /* --- Footer --- */
 body.theme-claude .site-footer {
   position: static !important;
@@ -617,13 +728,23 @@ body.theme-claude strong {
       padding-top: 0;
     }
 
-    body.theme-claude .image.avatar img {
-      width: 140px;
-      height: 140px;
-    }
+  body.theme-claude .image.avatar img {
+    width: 140px;
+    height: 140px;
+  }
 
-    body.theme-claude .theme-switcher {
-      bottom: 16px;
+  body.theme-claude .institution-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  body.theme-claude .institution-wide-logo {
+    width: 48px;
+    height: 48px;
+  }
+
+  body.theme-claude .theme-switcher {
+    bottom: 16px;
       right: 16px;
     }
   }
@@ -635,5 +756,10 @@ body.theme-claude strong {
 
   body.theme-claude .section {
     margin-bottom: 32px;
+  }
+
+  body.theme-claude .award-meta {
+    display: block;
+    margin: 4px 0 0;
   }
 }
