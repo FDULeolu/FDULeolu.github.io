@@ -1,75 +1,58 @@
-# Academic Pages
-**Academic Pages is a Github Pages template for academic websites.**
+# 🚀 极简学术主页模板 (Minimal Academic Homepage)
 
-# Getting Started
+这是一个基于 HTML/CSS 的极简学术主页模板，专为研究人员、学生和学者设计。它具有响应式设计、深色模式支持、优雅的排版以及易于定制的特点。
 
-1. Register a GitHub account if you don't have one and confirm your e-mail (required!)
-1. Click the "Use this template" button in the top right.
-1. On the "New repository" page, enter your repository name as "[your GitHub username].github.io", which will also be your website's URL.
-1. Set site-wide configuration and add your content.
-1. Upload any files (like PDFs, .zip files, etc.) to the `files/` directory. They will appear at https://[your GitHub username].github.io/files/example.pdf.
-1. Check status by going to the repository settings, in the "GitHub pages" section
-1. (Optional) Use the Jupyter notebooks or python scripts in the `markdown_generator` folder to generate markdown files for publications and talks from a TSV file.
+> [!TIP]
+> 如果你觉得这个模板对你有帮助，欢迎给一个 Star 🌟！
 
-See more info at https://academicpages.github.io/
+## ✨ 特性
 
-## Running locally
+- **极简设计**：聚焦内容，去除冗余，参考了 [Claude.ai](https://claude.ai) 的视觉风格。
+- **响应式布局**：在手机、平板和桌面端都有良好的显示效果。
+- **深色模式**：支持手动切换和系统自动随动。
+- **学术友好**：内置教育背景、研究经历、项目展示、论文列表（支持图标链接）和获奖情况等板块。
+- **易于部署**：纯静态页面，无需任何构建步骤，直接托管在 GitHub Pages。
 
-When you are initially working your website, it is very useful to be able to preview the changes locally before pushing them to GitHub. To work locally you will need to:
+## 🛠️ 快速开始：定制你的主页
 
-1. Clone the repository and made updates as detailed above.
-1. Make sure you have ruby-dev, bundler, and nodejs installed
-    
-    On most Linux distribution and [Windows Subsystem Linux](https://learn.microsoft.com/en-us/windows/wsl/about) the command is:
-    ```bash
-    sudo apt install ruby-dev ruby-bundler nodejs
-    ```
-    On MacOS the commands are:
-    ```bash
-    brew install ruby
-    brew install node
-    gem install bundler
-    ```
-1. Run `bundle install` to install ruby dependencies. If you get errors, delete Gemfile.lock and try again.
-1. Run `jekyll serve -l -H localhost` to generate the HTML and serve it from `localhost:4000` the local server will automatically rebuild and refresh the pages on change.
+你可以通过以下步骤快速创建属于自己的主页：
 
-If you are running on Linux it may be necessary to install some additional dependencies prior to being able to run locally: `sudo apt install build-essential gcc make`
+### 1. Fork 本仓库
+点击仓库右上角的 **Fork** 按钮，将代码克隆到你自己的 GitHub 账号下。
 
-## Using Docker
+### 2. 修改个人信息
+打开 `index.html` 文件，搜索并替换以下内容：
+- **基本信息**：姓名、邮箱、头像路径。
+- **社交链接**：修改 `social-icons` 部分的链接（GitHub, Google Scholar, LinkedIn 等）。
+- **板块内容**：
+  - `About Me`：简短的自我介绍。
+  - `Education`：替换学校 Logo 和学位信息。
+  - `Experience`：添加你的实习或研究经历。
+  - `Publications`：按照格式添加你的论文。
+  - `Awards`：列出你的荣誉。
 
-Working from a different OS, or just want to avoid installing dependencies? You can use the provided `Dockerfile` to build a container that will run the site for you if you have [Docker](https://www.docker.com/) installed.
+### 3. 替换资源文件
+- **头像**：将你的头像放入 `assets/img/` 并命名为 `avatar.png`。
+- **Logo**：将学校或机构的 Logo 放入 `assets/img/`。
+- **简历**：将你的 PDF 简历放入 `assets/cv/`。
 
-Start by build the container:
+### 4. 开启 GitHub Pages
+在你的仓库设置中：
+1. 进入 `Settings` -> `Pages`。
+2. 在 `Build and deployment` 下，选择 `Deploy from a branch`。
+3. 选择 `main` 分支和 `/ (root)` 目录，点击 `Save`。
+4. 几分钟后，你的主页就会在 `https://<your-username>.github.io` 上线。
 
-```bash
-docker build -t jekyll-site .
-```
+## 🎨 进阶定制
 
-Next, run the container:
-```bash
-docker run -p 4000:4000 --rm -v $(pwd):/usr/src/app jekyll-site
-```
+### 修改主题颜色
+如果你想修改主题色（如链接颜色、强调色），可以编辑 `assets/css/theme-claude.css`。
 
-# Maintenance
+### 访客地图
+主页集成了 [ClustrMaps](https://clustrmaps.com/)。你可以去官网注册并获取你自己的地图 ID，然后替换 `index.html` 中 `updateMap` 函数里的相关参数。
 
-Bug reports and feature requests to the template should be [submitted via GitHub](https://github.com/academicpages/academicpages.github.io/issues/new/choose). For questions concerning how to style the template, please feel free to start a [new discussion on GitHub](https://github.com/academicpages/academicpages.github.io/discussions).
-
-This repository was forked (then detached) by [Stuart Geiger](https://github.com/staeiou) from the [Minimal Mistakes Jekyll Theme](https://mmistakes.github.io/minimal-mistakes/), which is © 2016 Michael Rose and released under the MIT License (see LICENSE.md). It is currently being maintained by [Robert Zupko](https://github.com/rjzupkoii) and additional maintainers would be welcomed.
-
-## Bugfixes and enhancements
-
-If you have bugfixes and enhancements that you would like to submit as a pull request, you will need to [fork](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/fork-a-repo) this repository as opposed to using it as a template. This will also allow you to [synchronize your copy](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/working-with-forks/syncing-a-fork) of template to your fork as well.
-
-Unfortunately, one logistical issue with a template theme like Academic Pages that makes it a little tricky to get bug fixes and updates to the core theme. If you use this template and customize it, you will probably get merge conflicts if you attempt to synchronize. If you want to save your various .yml configuration files and markdown files, you can delete the repository and fork it again. Or you can manually patch.
+## 📄 许可证
+本项目采用 [MIT License](LICENSE.md) 开源。
 
 ---
-<div align="center">
-    
-![pages-build-deployment](https://github.com/academicpages/academicpages.github.io/actions/workflows/pages/pages-build-deployment/badge.svg)
-[![GitHub contributors](https://img.shields.io/github/contributors/academicpages/academicpages.github.io.svg)](https://github.com/academicpages/academicpages.github.io/graphs/contributors)
-[![GitHub release](https://img.shields.io/github/v/release/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/releases/latest)
-[![GitHub license](https://img.shields.io/github/license/academicpages/academicpages.github.io?color=blue)](https://github.com/academicpages/academicpages.github.io/blob/master/LICENSE)
-
-[![GitHub stars](https://img.shields.io/github/stars/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io)
-[![GitHub forks](https://img.shields.io/github/forks/academicpages/academicpages.github.io)](https://github.com/academicpages/academicpages.github.io/fork)
-</div>
+由 [Yuheng Yang](https://github.com/wzsyyh) 维护。
