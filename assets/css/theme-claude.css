@@ -14,6 +14,9 @@
   --claude-social-bg: #FFFFFF;
   --claude-social-text: #8B7355;
   --claude-footer-border: rgba(194, 113, 79, 0.15);
+  --claude-font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --claude-font-serif: "Inter", Georgia, serif;
+  --claude-font-mono: "Ubuntu Mono", "SF Mono", monospace;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -62,12 +65,19 @@
 body.theme-claude {
   background-color: var(--claude-bg);
   color: var(--claude-text);
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--claude-font-sans);
   font-size: 16px;
   line-height: 1.65;
   font-weight: 400;
   padding: 0;
   transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Remove `font-anthropic-ish` from <body> to revert this typography layer. */
+body.theme-claude.font-anthropic-ish {
+  --claude-font-sans: "Instrument Sans", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --claude-font-serif: "Newsreader", Georgia, serif;
+  --claude-font-mono: "IBM Plex Mono", "SF Mono", monospace;
 }
 
 /* --- Top Navigation Bar --- */
@@ -226,12 +236,13 @@ body.theme-claude .site-name {
   color: var(--claude-text);
   margin: 0 0 8px;
   line-height: 1.2;
+  font-family: var(--claude-font-serif);
 }
 
 body.theme-claude .site-email {
   font-size: 13px;
   color: var(--claude-secondary);
-  font-family: "Ubuntu Mono", "SF Mono", monospace;
+  font-family: var(--claude-font-mono);
   margin: 0 0 20px;
   word-break: break-all;
 }
@@ -338,6 +349,7 @@ body.theme-claude .section-title {
   padding-bottom: 10px;
   border-bottom: 2px solid var(--claude-accent);
   display: inline-block;
+  font-family: var(--claude-font-serif);
 }
 
 body.theme-claude .section-body {
@@ -490,6 +502,7 @@ body.theme-claude .experience-content p {
 body.theme-claude .exp-title {
   font-size: 15px;
   color: var(--claude-text);
+  font-family: var(--claude-font-serif);
 }
 
 body.theme-claude .exp-detail {
@@ -589,6 +602,15 @@ body.theme-claude .publications ol.bibliography li .title {
   font-size: 15px;
   color: var(--claude-text);
   margin-bottom: 4px;
+  font-family: var(--claude-font-serif);
+}
+
+body.theme-claude.font-anthropic-ish .site-name,
+body.theme-claude.font-anthropic-ish .section-title,
+body.theme-claude.font-anthropic-ish .exp-title,
+body.theme-claude.font-anthropic-ish .publications ol.bibliography li .title {
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 body.theme-claude .publications ol.bibliography li .author {
@@ -611,6 +633,15 @@ body.theme-claude .publications ol.bibliography li .links a {
 
 body.theme-claude .publications ol.bibliography li .links a:hover {
   filter: brightness(1.2);
+}
+
+body.theme-claude .exp-title,
+body.theme-claude .exp-detail,
+body.theme-claude .publications ol.bibliography li .title,
+body.theme-claude .publications ol.bibliography li .author,
+body.theme-claude .publications ol.bibliography li .periodical,
+body.theme-claude .publications ol.bibliography li .links {
+  overflow-wrap: anywhere;
 }
 
 /* --- Awards --- */
@@ -699,43 +730,73 @@ body.theme-claude strong {
 }
 
 /* --- Responsive --- */
-  @media (max-width: 1080px) {
-    body.theme-claude .wrapper {
-      width: 100%;
-      flex-direction: column;
-      padding: 0 20px;
-      box-sizing: border-box;
-    }
+@media (max-width: 1080px) {
+  body.theme-claude .nav-container {
+    padding: 0 24px;
+  }
 
-    body.theme-claude .sidebar {
-      width: 100%;
-      position: static;
-      height: auto;
-      padding: 48px 0 24px;
-      overflow: visible;
-    }
+  body.theme-claude .wrapper {
+    width: 100%;
+    max-width: 760px;
+    flex-direction: column;
+    padding: 60px 24px 0;
+    box-sizing: border-box;
+    min-height: auto;
+  }
 
-    body.theme-claude .content {
-      padding: 32px 0 48px;
-    }
+  body.theme-claude .sidebar {
+    width: 100%;
+    position: static;
+    left: auto;
+    top: auto;
+    height: auto;
+    padding: 24px 0 20px;
+    overflow: visible;
+  }
 
-    body.theme-claude .site-footer {
-      padding: 32px 0;
-    }
+  body.theme-claude .profile-card {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 0;
+  }
 
-    body.theme-claude .site-footer p {
-      border-top: none;
-      padding-top: 0;
-    }
+  body.theme-claude .image.avatar {
+    margin-bottom: 24px;
+  }
 
   body.theme-claude .image.avatar img {
-    width: 140px;
-    height: 140px;
+    width: 152px;
+    height: 152px;
+  }
+
+  body.theme-claude .sidebar-map {
+    width: min(100%, 240px);
+    margin-top: 32px;
+  }
+
+  body.theme-claude .content {
+    width: 100%;
+    padding: 28px 0 48px;
+    margin-left: 0;
+  }
+
+  body.theme-claude .timeline-item {
+    margin-left: 18px;
+    padding-left: 10px;
+  }
+
+  body.theme-claude .timeline-item::before {
+    left: -18px;
+  }
+
+  body.theme-claude .timeline-item::after {
+    left: -23px;
   }
 
   body.theme-claude .institution-logo {
     width: 48px;
     height: 48px;
+    margin-right: 14px;
   }
 
   body.theme-claude .institution-wide-logo {
@@ -743,23 +804,259 @@ body.theme-claude strong {
     height: 48px;
   }
 
-  body.theme-claude .theme-switcher {
-    bottom: 16px;
-      right: 16px;
-    }
+  body.theme-claude .site-footer {
+    padding: 24px 0 36px;
   }
 
+  body.theme-claude .site-footer p {
+    border-top: none;
+    padding-top: 0;
+  }
+
+  body.theme-claude .theme-switcher {
+    bottom: 16px;
+    right: 16px;
+  }
+}
+
+@media (max-width: 720px) {
+  body.theme-claude .top-nav {
+    height: 56px;
+  }
+
+  body.theme-claude .nav-container {
+    padding: 0 16px;
+  }
+
+  body.theme-claude .nav-left a {
+    font-size: 16px;
+  }
+
+  body.theme-claude .nav-right .theme-toggle {
+    font-size: 18px;
+    padding: 6px;
+  }
+
+  body.theme-claude .wrapper {
+    padding: 56px 16px 0;
+  }
+
+  body.theme-claude .sidebar {
+    padding: 20px 0 16px;
+  }
+
+  body.theme-claude .image.avatar img {
+    width: 120px;
+    height: 120px;
+  }
+
+  body.theme-claude .site-name {
+    font-size: 24px;
+  }
+
+  body.theme-claude .site-email {
+    margin-bottom: 16px;
+    font-size: 12px;
+  }
+
+  body.theme-claude .social-icons {
+    gap: 10px;
+  }
+
+  body.theme-claude .social-icons a {
+    width: 38px;
+    height: 38px;
+  }
+
+  body.theme-claude .sidebar-map {
+    width: min(100%, 220px);
+    margin-top: 28px;
+  }
+
+  body.theme-claude .content {
+    padding: 20px 0 40px;
+  }
+
+  body.theme-claude .section {
+    margin-bottom: 36px;
+  }
+
+  body.theme-claude .section-title {
+    font-size: 18px;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+  }
+
+  body.theme-claude .section-body p {
+    margin: 0 0 12px;
+  }
+
+  body.theme-claude .news-item,
+  body.theme-claude .publications ol.bibliography li {
+    padding-left: 12px;
+  }
+
+  body.theme-claude .timeline-item {
+    margin-left: 14px;
+    padding-left: 10px;
+    padding-bottom: 18px;
+  }
+
+  body.theme-claude .timeline-item::before {
+    left: -14px;
+  }
+
+  body.theme-claude .timeline-item::after {
+    left: -19px;
+    top: 18px;
+    width: 9px;
+    height: 9px;
+  }
+
+  body.theme-claude .experience-item {
+    gap: 12px;
+  }
+
+  body.theme-claude .institution-logo {
+    width: 44px;
+    height: 44px;
+    margin-right: 0;
+  }
+
+  body.theme-claude .institution-wide-logo {
+    width: 44px;
+    height: 44px;
+  }
+
+  body.theme-claude .exp-title {
+    font-size: 14px;
+  }
+
+  body.theme-claude .exp-detail {
+    font-size: 13px;
+  }
+
+  body.theme-claude .exp-period {
+    margin-top: 4px;
+    font-size: 12px;
+  }
+
+  body.theme-claude .teaching-course {
+    max-width: 100%;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1.3;
+    text-align: center;
+    white-space: normal;
+  }
+
+  body.theme-claude .award-item {
+    align-items: flex-start;
+  }
+
+  body.theme-claude .award-meta {
+    display: block;
+    margin: 4px 0 0;
+  }
+}
+
 @media (max-width: 480px) {
-  body.theme-claude .card {
-    padding: 14px 16px;
+  body.theme-claude {
+    font-size: 15px;
+  }
+
+  body.theme-claude .top-nav {
+    height: 54px;
+  }
+
+  body.theme-claude .nav-container {
+    padding: 0 14px;
+  }
+
+  body.theme-claude .wrapper {
+    padding: 54px 14px 0;
+  }
+
+  body.theme-claude .sidebar {
+    padding: 16px 0 12px;
+  }
+
+  body.theme-claude .image.avatar img {
+    width: 104px;
+    height: 104px;
+  }
+
+  body.theme-claude .site-name {
+    font-size: 22px;
+  }
+
+  body.theme-claude .site-email {
+    font-size: 11px;
+  }
+
+  body.theme-claude .social-icons a {
+    width: 36px;
+    height: 36px;
+    font-size: 1rem;
+  }
+
+  body.theme-claude .sidebar-map {
+    width: min(100%, 200px);
+    margin-top: 24px;
+  }
+
+  body.theme-claude .content {
+    padding: 18px 0 32px;
   }
 
   body.theme-claude .section {
     margin-bottom: 32px;
   }
 
-  body.theme-claude .award-meta {
-    display: block;
-    margin: 4px 0 0;
+  body.theme-claude .section-title {
+    font-size: 17px;
+  }
+
+  body.theme-claude .timeline-item {
+    margin-left: 12px;
+    padding-left: 8px;
+  }
+
+  body.theme-claude .timeline-item::before {
+    left: -12px;
+  }
+
+  body.theme-claude .timeline-item::after {
+    left: -16px;
+    top: 16px;
+    width: 8px;
+    height: 8px;
+  }
+
+  body.theme-claude .experience-item {
+    gap: 10px;
+  }
+
+  body.theme-claude .institution-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  body.theme-claude .institution-wide-logo {
+    width: 40px;
+    height: 40px;
+  }
+
+  body.theme-claude .publications ol.bibliography li .title {
+    font-size: 14px;
+  }
+
+  body.theme-claude .publications ol.bibliography li .author,
+  body.theme-claude .publications ol.bibliography li .periodical {
+    font-size: 13px;
+  }
+
+  body.theme-claude .publications ol.bibliography li .links a {
+    font-size: 12px;
   }
 }
