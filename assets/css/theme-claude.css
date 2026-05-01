@@ -627,12 +627,25 @@ body.theme-claude .publications ol.bibliography li .periodical {
 
 body.theme-claude .publications ol.bibliography li .links a {
   color: var(--claude-accent);
-  font-size: 13px;
+  font-size: 12.5px;
   font-weight: 500;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--claude-border);
+  background: rgba(194, 113, 79, 0.06);
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
 body.theme-claude .publications ol.bibliography li .links a:hover {
-  filter: brightness(1.2);
+  background: rgba(194, 113, 79, 0.12);
+  border-color: rgba(194, 113, 79, 0.34);
+  color: var(--claude-text);
+  transform: translateY(-1px);
 }
 
 body.theme-claude .exp-title,
@@ -642,6 +655,23 @@ body.theme-claude .publications ol.bibliography li .author,
 body.theme-claude .publications ol.bibliography li .periodical,
 body.theme-claude .publications ol.bibliography li .links {
   overflow-wrap: anywhere;
+}
+
+body.theme-claude .publications ol.bibliography li .links {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+html[data-theme="dark"] body.theme-claude .publications ol.bibliography li .links a {
+  background: rgba(226, 138, 103, 0.08);
+}
+
+html[data-theme="dark"] body.theme-claude .publications ol.bibliography li .links a:hover {
+  background: rgba(226, 138, 103, 0.14);
+  border-color: rgba(226, 138, 103, 0.34);
+  color: var(--claude-text);
 }
 
 /* --- Awards --- */
