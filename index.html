@@ -104,6 +104,14 @@
           <div class="news-list">
             <article class="news-item">
               <p class="news-date">May 2026</p>
+              <p class="news-text">I was invited as a reviewer for <a href="https://ai4math2026.github.io/">AI4Math Workshop, ICML 2026</a>!</p>
+            </article>
+            <article class="news-item">
+              <p class="news-date">May 2026</p>
+              <p class="news-text">I was invited to participate the 2026 Open Day event of the <a href="https://collegeai.tsinghua.edu.cn/">College of Artificial Intelligence</a>, the <a href="https://www.stat.tsinghua.edu.cn/">Department of Statistics and Data Science</a>, and the <a href="https://iiis.tsinghua.edu.cn/">Institute for Interdisciplinary Information Sciences</a> at Tsinghua University!</p>
+            </article>
+            <article class="news-item">
+              <p class="news-date">May 2026</p>
               <p class="news-text">One new preprint on the <a href="https://arxiv.org/abs/2605.00347">training VLM with long-horizon RL on video games</a> is now available on arXiv.</p>
             </article>
             <article class="news-item">
@@ -114,30 +122,36 @@
               <p class="news-date">February 2026</p>
               <p class="news-text">Our new preprint on the <a href="https://arxiv.org/abs/2601.21455">coverage-length metric of conformal prediction</a> is now available on arXiv.</p>
             </article>
-            <article class="news-item">
-              <p class="news-date">December 2025</p>
-              <p class="news-text">I was honored to receive the <strong>Zheng Zukang Scholarship</strong>.</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">October 2025</p>
-              <p class="news-text">I was honored to receive the <strong>National Scholarship</strong>.</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">September 2025</p>
-              <p class="news-text">Our new preprint on the <a href="https://arxiv.org/abs/2509.22529">interpretability of conformal prediction</a> is now available on arXiv.</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">June 2025</p>
-              <p class="news-text">One paper was accepted by ICML 2025 Workshop.</p>
-            </article>
-            <!-- <article class="news-item">
-              <p class="news-date">December 2024</p>
-              <p class="news-text">I am going to visit <a href="https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html">Yang Yuan</a> at THU IIIS.</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">April 2024</p>
-              <p class="news-text">I started my research supervised by <a href="https://www.tengjiaye.com/">Jiaye Teng</a>.</p>
-            </article> -->
+            <div class="news-older" id="olderNews" hidden>
+              <article class="news-item">
+                <p class="news-date">December 2025</p>
+                <p class="news-text">I was honored to receive the <strong>Zheng Zukang Scholarship</strong>.</p>
+              </article>
+              <article class="news-item">
+                <p class="news-date">October 2025</p>
+                <p class="news-text">I was honored to receive the <strong>National Scholarship</strong>.</p>
+              </article>
+              <article class="news-item">
+                <p class="news-date">September 2025</p>
+                <p class="news-text">Our new preprint on the <a href="https://arxiv.org/abs/2509.22529">interpretability of conformal prediction</a> is now available on arXiv.</p>
+              </article>
+              <article class="news-item">
+                <p class="news-date">June 2025</p>
+                <p class="news-text">One paper was accepted by ICML 2025 Workshop.</p>
+              </article>
+              <!-- <article class="news-item">
+                <p class="news-date">December 2024</p>
+                <p class="news-text">I am going to visit <a href="https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html">Yang Yuan</a> at THU IIIS.</p>
+              </article>
+              <article class="news-item">
+                <p class="news-date">April 2024</p>
+                <p class="news-text">I started my research supervised by <a href="https://www.tengjiaye.com/">Jiaye Teng</a>.</p>
+              </article> -->
+            </div>
+            <button class="news-toggle" type="button" aria-expanded="false" aria-controls="olderNews">
+              <span class="news-toggle-text">View older updates</span>
+              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -331,6 +345,15 @@
           <div class="card timeline-item">
             <div class="experience-item no-logo">
               <div class="experience-content">
+                <p class="exp-title"><strong><a href="https://ai4math2026.github.io/">AI for Math Workshop, ICML 2026</a></strong></p>
+                <p class="exp-detail">Reviewer</p>
+                <p class="exp-period">2026.5</p>
+              </div>
+            </div>
+          </div>
+          <div class="card timeline-item">
+            <div class="experience-item no-logo">
+              <div class="experience-content">
                 <p class="exp-title"><strong><a href="http://www.faic.cc/">Conference on the Fundamentals of Artificial Intelligence</a></strong></p>
                 <p class="exp-detail">Volunteer</p>
                 <p class="exp-period">2026.4, Shanghai</p>
@@ -475,6 +498,22 @@
           setTheme(e.matches);
         }
       });
+
+      const newsToggle = document.querySelector('.news-toggle');
+      const olderNews = document.getElementById('olderNews');
+
+      if (newsToggle && olderNews) {
+        const toggleText = newsToggle.querySelector('.news-toggle-text');
+
+        newsToggle.addEventListener('click', function() {
+          const isExpanded = newsToggle.getAttribute('aria-expanded') === 'true';
+          newsToggle.setAttribute('aria-expanded', String(!isExpanded));
+          olderNews.hidden = isExpanded;
+          if (toggleText) {
+            toggleText.textContent = isExpanded ? 'View older updates' : 'Hide older updates';
+          }
+        });
+      }
 
       // Intersection Observer for fade-in animations
       if ('IntersectionObserver' in window) {

@@ -542,6 +542,17 @@ body.theme-claude .news-list {
   gap: 14px;
 }
 
+body.theme-claude .news-older {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  animation: newsReveal 0.28s ease both;
+}
+
+body.theme-claude .news-older[hidden] {
+  display: none;
+}
+
 body.theme-claude .news-item {
   padding-left: 16px;
   border-left: 3px solid var(--claude-accent);
@@ -563,6 +574,50 @@ body.theme-claude .news-date {
 body.theme-claude .news-text {
   font-size: 15px;
   color: var(--claude-text);
+}
+
+body.theme-claude .news-toggle {
+  width: fit-content;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 2px;
+  padding: 6px 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--claude-accent) 42%, transparent);
+  background: transparent;
+  color: var(--claude-accent);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+body.theme-claude .news-toggle:hover {
+  color: var(--claude-text);
+  border-color: color-mix(in srgb, var(--claude-text) 34%, transparent);
+}
+
+body.theme-claude .news-toggle i {
+  font-size: 11px;
+  transition: transform 0.2s ease;
+}
+
+body.theme-claude .news-toggle[aria-expanded="true"] i {
+  transform: rotate(180deg);
+}
+
+@keyframes newsReveal {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 body.theme-claude .section-note {
