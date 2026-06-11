@@ -14,7 +14,7 @@
 
    Exposes window.HeroConstellation = { bindTopics() } and publishes
    window.__researchY (the scroll position of the research "page") for the
-   spring-scroll and scrollspy layers.
+   scrollspy and anchor layers.
    ========================================================================== */
 
 (function (global) {

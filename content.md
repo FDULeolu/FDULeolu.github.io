@@ -13,8 +13,8 @@ github: https://github.com/FDULeolu
 # Drop your PDF into assets/cv/ and uncomment the line below to enable CV buttons.
 # cv: assets/cv/YizhouLu_CV.pdf
 footer: © 2026 Yizhou Lu. All rights reserved.
-clustrmaps: https://www.clustrmaps.com/map_v2.png?cl=e28a67&w=240&t=tt&d=b62MJgfLx49SYGCjgV1xM7DswosPfq-0XClcoi4pyf0&co=141318&ct=d1cec7
-clustrmaps_link: https://clustrmaps.com/site/1c9oh
+goatcounter: https://yizhou.goatcounter.com/count
+goatcounter_home: https://yizhou.goatcounter.com
 ---
 
 ## Research

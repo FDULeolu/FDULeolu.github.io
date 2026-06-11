@@ -319,19 +319,40 @@
 
   function renderFooter(meta) {
     var footer = document.getElementById('siteFooter');
-    var map = '';
-    if (meta.clustrmaps) {
-      var mapImg = '<img src="' + escapeHtml(meta.clustrmaps) + '" alt="Visitor map" loading="lazy">';
-      map = meta.clustrmaps_link
-        ? '<a class="footer-map" href="' + escapeHtml(meta.clustrmaps_link) + '" target="_blank" rel="noopener">' + mapImg + '</a>'
-        : '<span class="footer-map">' + mapImg + '</span>';
+    var counter = '';
+    if (meta.goatcounter) {
+      var counterHref = meta.goatcounter_home || meta.goatcounter.replace(/\/count\/?$/, '');
+      counter =
+        '<a class="footer-counter" href="' + escapeHtml(counterHref) + '" target="_blank" rel="noopener">' +
+        '<span class="footer-counter-label">Site visits</span>' +
+        '<img src="' + escapeHtml(counterHref.replace(/\/$/, '') + '/counter/' + encodeURIComponent(location.pathname || '/')) +
+        '.svg" alt="Visitor count" loading="lazy">' +
+        '</a>';
     }
     footer.innerHTML =
       '<div class="footer-inner">' +
       '<div><p class="footer-copy">' + inline(meta.footer || '') + '</p>' +
       '<p class="footer-note">Rendered from a single markdown file.</p></div>' +
-      map +
+      counter +
       '</div>';
+  }
+
+  function initAnalytics(meta) {
+    if (!meta.goatcounter || document.querySelector('script[data-goatcounter]')) return;
+    var s = document.createElement('script');
+    s.async = true;
+    s.src = 'https://gc.zgo.at/count.js';
+    s.setAttribute('data-goatcounter', meta.goatcounter);
+    document.head.appendChild(s);
+  }
+
+  function initFooterCounter() {
+    var link = document.querySelector('.footer-counter');
+    var img = link && link.querySelector('img');
+    if (!link || !img) return;
+    img.addEventListener('load', function () { link.classList.add('is-loaded'); }, { once: true });
+    img.addEventListener('error', function () { link.hidden = true; }, { once: true });
+    if (img.complete && img.naturalWidth) link.classList.add('is-loaded');
   }
 
   /* ------------------------------------------------------------------ *
@@ -756,6 +777,8 @@
     renderNav(meta, sections);
     renderSections(meta, sections);
     renderFooter(meta);
+    initAnalytics(meta);
+    initFooterCounter();
 
     // collapse the hero runway when no constellation section exists
     var hasResearch = sections.some(function (s) { return s.type === 'constellation'; });

@@ -57,7 +57,11 @@ const summary = await page.evaluate(`({
   skyCanvasPainted: ${painted('#skyCanvas')},
   bodyClasses: document.body.className,
   lenis: !!window.__lenis,
-  gsap: typeof window.gsap !== 'undefined'
+  gsap: typeof window.gsap !== 'undefined',
+  snapType: getComputedStyle(document.documentElement).scrollSnapType,
+  favicon: document.querySelector('link[rel="icon"][type="image/svg+xml"]')?.getAttribute('href'),
+  goatcounter: document.querySelector('script[data-goatcounter]')?.getAttribute('data-goatcounter'),
+  footerCounter: !!document.querySelector('.footer-counter')
 })`);
 
 console.log(JSON.stringify(summary, null, 2));
@@ -73,16 +77,32 @@ if (summary.researchHead) errors.push('[research] visible header still rendered'
 if (summary.aboutIndex !== '01') errors.push('[sections] about index: ' + summary.aboutIndex);
 if (typeof summary.researchY !== 'number') errors.push('[research] __researchY not published');
 if (!summary.skyCanvasPainted) errors.push('[sky] backdrop canvas not painted');
+if (summary.snapType !== 'none') errors.push('[scroll] snap still active: ' + summary.snapType);
+if (summary.favicon !== 'assets/img/favicon.svg') errors.push('[favicon] got: ' + summary.favicon);
+if (summary.goatcounter !== 'https://yizhou.goatcounter.com/count') errors.push('[goatcounter] script missing');
+if (!summary.footerCounter) errors.push('[goatcounter] footer counter missing');
 
 await page.screenshot({ path: `${OUT}/01-hero-desktop.png` });
 
-// ---- spring test 1: pull deep inside the hero zone → springs to Research ----
+// Natural wheel movement: the page should move with the user, not snap to the
+// virtual research stop or bounce back to the hero.
 await page.mouse.move(720, 450);
 await page.mouse.wheel(0, 520);
-await page.waitForTimeout(3000);
+await page.waitForTimeout(1000);
+const naturalScroll = await page.evaluate(() => ({ y: Math.round(window.scrollY), ry: window.__researchY }));
+console.log('natural wheel movement:', JSON.stringify(naturalScroll));
+if (naturalScroll.y < 120) errors.push('[scroll] wheel movement too small: ' + naturalScroll.y);
+if (Math.abs(naturalScroll.y - naturalScroll.ry) <= 6) errors.push('[scroll] wheel snapped to research stop');
+
+await page.evaluate(() => {
+  const y = window.__researchY || 0;
+  if (window.__lenis) window.__lenis.scrollTo(y, { immediate: true });
+  else window.scrollTo({ top: y, behavior: 'instant' });
+});
+await page.waitForTimeout(1200);
 const s1 = await page.evaluate(() => ({ y: Math.round(window.scrollY), ry: window.__researchY }));
-console.log('spring release hero → research:', JSON.stringify(s1));
-if (Math.abs(s1.y - s1.ry) > 4) errors.push('[spring] hero→research expected ' + s1.ry + ', got ' + s1.y);
+console.log('manual research state:', JSON.stringify(s1));
+if (Math.abs(s1.y - s1.ry) > 8) errors.push('[research] manual scroll expected ' + s1.ry + ', got ' + s1.y);
 await page.waitForTimeout(700);
 await page.screenshot({ path: `${OUT}/01b-research.png` });
 
@@ -93,25 +113,11 @@ const visibleLabels = await page.evaluate(() =>
 console.log('visible topic labels at research:', visibleLabels);
 if (visibleLabels < 2) errors.push('[research] only ' + visibleLabels + ' labels visible');
 
-// ---- spring test 2: a small pull bounces back to research ----
-await page.mouse.wheel(0, 170);
-await page.waitForTimeout(2400);
-const s2 = await page.evaluate(() => Math.round(window.scrollY));
-console.log('spring bounce-back at research:', s2);
-if (Math.abs(s2 - s1.ry) > 6) errors.push('[spring] bounce expected ' + s1.ry + ', got ' + s2);
-
-// ---- spring test 3: a deep pull releases to About ----
 await page.mouse.wheel(0, 620);
-await page.waitForTimeout(3000);
-const s3 = await page.evaluate(() => {
-  const about = document.getElementById('about');
-  return {
-    y: Math.round(window.scrollY),
-    aboutTop: Math.round(about.getBoundingClientRect().top + window.scrollY)
-  };
-});
-console.log('spring release research → about:', JSON.stringify(s3));
-if (Math.abs(s3.y - s3.aboutTop) > 4) errors.push('[spring] research→about expected ' + s3.aboutTop + ', got ' + s3.y);
+await page.waitForTimeout(1000);
+const afterResearchWheel = await page.evaluate(() => Math.round(window.scrollY));
+console.log('natural wheel after research:', afterResearchWheel);
+if (afterResearchWheel <= s1.y + 120) errors.push('[scroll] wheel after research did not continue naturally');
 
 // meteor API smoke
 await page.evaluate(() => window.SiteSky.meteor());
@@ -192,9 +198,7 @@ const menuClosed = await mob.evaluate(() => document.getElementById('menuOverlay
 console.log('menu closes after click:', menuClosed);
 await mob.screenshot({ path: `${OUT}/11-mobile-publications.png` });
 
-// research state on mobile (no lenis there: jump straight to the rest point;
-// CSS proximity-snap would re-anchor a programmatic jump, so disable it the
-// way a real finger-drag pauses it)
+// research state on mobile (no Lenis there: jump straight to the rest point)
 await mob.waitForFunction(() => {
   const y = window.scrollY;
   const settled = window.__lastY === y;
@@ -202,7 +206,6 @@ await mob.waitForFunction(() => {
   return settled;
 }, null, { polling: 350, timeout: 10000 });
 await mob.evaluate(() => {
-  document.documentElement.style.scrollSnapType = 'none';
   window.scrollTo({ top: window.__researchY || 0, behavior: 'instant' });
 });
 await mob.waitForTimeout(1400);
@@ -221,6 +224,40 @@ await mob.screenshot({ path: `${OUT}/12-mobile-research.png` });
 const overflow = await mob.evaluate(() =>
   document.documentElement.scrollWidth - document.documentElement.clientWidth);
 console.log('mobile horizontal overflow px:', overflow);
+if (overflow > 1) errors.push('[mobile overflow] ' + overflow);
+
+// Additional viewport smoke checks for common tablet and small-phone sizes.
+const viewports = [
+  { name: 'tablet-landscape', width: 1024, height: 768 },
+  { name: 'tablet-portrait', width: 768, height: 1024 },
+  { name: 'small-phone', width: 320, height: 568 }
+];
+
+for (const vp of viewports) {
+  const p = await browser.newPage({ viewport: { width: vp.width, height: vp.height } });
+  p.on('console', msg => { if (msg.type() === 'error') errors.push('[' + vp.name + ' console] ' + msg.text()); });
+  p.on('pageerror', err => errors.push('[' + vp.name + ' pageerror] ' + err.message));
+  await p.goto(BASE, { waitUntil: 'networkidle' });
+  await p.waitForSelector('#sections section', { timeout: 8000 });
+  await p.waitForTimeout(900);
+  const state = await p.evaluate(() => {
+    const name = document.getElementById('heroName')?.getBoundingClientRect();
+    return {
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+      burger: !!document.querySelector('#navBurger') && getComputedStyle(document.getElementById('navBurger')).display !== 'none',
+      nav: [...document.querySelectorAll('.nav-link')].filter(a => getComputedStyle(a).display !== 'none').length,
+      heroNameWidth: name ? Math.round(name.width) : 0,
+      viewport: document.documentElement.clientWidth,
+      snapType: getComputedStyle(document.documentElement).scrollSnapType
+    };
+  });
+  console.log(vp.name + ' viewport:', JSON.stringify(state));
+  if (state.overflow > 1) errors.push('[' + vp.name + ' overflow] ' + state.overflow);
+  if (state.heroNameWidth > state.viewport) errors.push('[' + vp.name + ' hero overflow] ' + state.heroNameWidth);
+  if (state.snapType !== 'none') errors.push('[' + vp.name + ' snap] ' + state.snapType);
+  await p.screenshot({ path: `${OUT}/vp-${vp.name}.png` });
+  await p.close();
+}
 
 await browser.close();
 

@@ -3,7 +3,7 @@
 
    A fixed canvas behind the whole page with tiny parallax stars,
    occasional twinkle, and shooting stars (meteors). Meteors fire
-   ambiently and on page-spring transitions (see motion.js).
+   ambiently and can also be triggered by smoke tests.
 
    Exposed as window.SiteSky: { meteor(), meteorMaybe() }
    ========================================================================== */

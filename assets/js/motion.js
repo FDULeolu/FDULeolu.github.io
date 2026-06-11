@@ -104,124 +104,6 @@
   }
 
   /* ------------------------------------------------------------------ *
-   *  Spring paging                                                      *
-   *  Inside a page's content you scroll freely. Past its edge you enter *
-   *  a spring zone: release with little penetration and you bounce back *
-   *  to the edge; pull deep enough and the page springs to the next.    *
-   * ------------------------------------------------------------------ */
-
-  function initSpring(lenis) {
-    if (!lenis) return;
-
-    var zones = [];          // { A, B } — spring gaps between page rest points
-    var dir = 1;
-    var springing = false;
-    var pointerDown = false;
-    var idleTimer = 0;
-
-    var RELEASE = 0.22;      // idle penetration that commits to the next page
-    var EARLY = 0.55;        // penetration that commits while still moving
-
-    function compute() {
-      var vh = window.innerHeight;
-      var y = window.scrollY || 0;
-      var max = Math.max(0, document.documentElement.scrollHeight - vh);
-      var items = [{ rest: 0, end: 0 }];
-
-      if (typeof global.__researchY === 'number') {
-        items.push({ rest: global.__researchY, end: global.__researchY });
-      }
-
-      document.querySelectorAll('#sections .section').forEach(function (s) {
-        var top = Math.round(s.getBoundingClientRect().top + y);
-        items.push({ rest: top, end: top + Math.max(0, s.offsetHeight - vh) });
-      });
-      items.push({ rest: max, end: max });
-
-      items.sort(function (a, b) { return a.rest - b.rest; });
-
-      zones = [];
-      for (var i = 0; i < items.length - 1; i++) {
-        var A = Math.min(items[i].end, items[i + 1].rest);
-        var B = items[i + 1].rest;
-        if (B - A > 24) zones.push({ A: A, B: B });
-      }
-    }
-
-    function findZone(y) {
-      for (var i = 0; i < zones.length; i++) {
-        if (y > zones[i].A + 2 && y < zones[i].B - 2) return zones[i];
-      }
-      return null;
-    }
-
-    function go(target, bounce) {
-      springing = true;
-      if (!bounce && global.SiteSky) global.SiteSky.meteorMaybe();
-      lenis.scrollTo(target, {
-        duration: bounce ? 0.85 : 1.25,
-        easing: bounce
-          ? function (t) { var s = 1.4; t -= 1; return 1 + t * t * ((s + 1) * t + s); }
-          : function (t) { return 1 - Math.pow(1 - t, 3.6); },
-        onComplete: function () { springing = false; }
-      });
-    }
-
-    function settle() {
-      if (springing || pointerDown || document.hidden) return;
-      var y = window.scrollY || 0;
-      var z = findZone(y);
-      if (!z) return;
-      var len = z.B - z.A;
-      var pen = dir > 0 ? (y - z.A) / len : (z.B - y) / len;
-      if (pen >= RELEASE) go(dir > 0 ? z.B : z.A, false);
-      else go(dir > 0 ? z.A : z.B, true);
-    }
-
-    lenis.on('scroll', function (e) {
-      var v = e && typeof e.velocity === 'number' ? e.velocity : 0;
-      if (v > 0.05) dir = 1;
-      else if (v < -0.05) dir = -1;
-      if (springing) return;
-
-      // deep pull while slowing → commit early (feels like the spring lets go)
-      if (Math.abs(v) < 45 && !pointerDown) {
-        var y = window.scrollY || 0;
-        var z = findZone(y);
-        if (z) {
-          var len = z.B - z.A;
-          var pen = dir > 0 ? (y - z.A) / len : (z.B - y) / len;
-          if (pen >= EARLY) {
-            clearTimeout(idleTimer);
-            go(dir > 0 ? z.B : z.A, false);
-            return;
-          }
-        }
-      }
-
-      clearTimeout(idleTimer);
-      idleTimer = setTimeout(settle, 140);
-    });
-
-    ['wheel', 'touchmove', 'keydown'].forEach(function (ev) {
-      window.addEventListener(ev, function () {
-        // user input takes over from an in-flight spring
-        springing = false;
-      }, { passive: true });
-    });
-    window.addEventListener('pointerdown', function () { pointerDown = true; }, { passive: true });
-    window.addEventListener('pointerup', function () { pointerDown = false; }, { passive: true });
-
-    compute();
-    global.ScrollTrigger.addEventListener('refresh', compute);
-    var rt = 0;
-    window.addEventListener('resize', function () {
-      clearTimeout(rt);
-      rt = setTimeout(compute, 180);
-    }, { passive: true });
-  }
-
-  /* ------------------------------------------------------------------ *
    *  Hero entrance                                                      *
    * ------------------------------------------------------------------ */
 
@@ -388,10 +270,9 @@
       }
 
       document.body.classList.add('has-motion');
-      var lenis = initLenis();
+      initLenis();
       setInitialStates();
       initScrollEffects();
-      initSpring(lenis);
       initTilt();
       initMagnetic();
     },

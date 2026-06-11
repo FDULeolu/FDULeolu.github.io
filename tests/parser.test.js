@@ -25,7 +25,8 @@ check('meta.scholar has &user=', /user=KKpXYUQAAAAJ/.test(meta.scholar), meta.sc
 check('meta.github', meta.github === 'https://github.com/FDULeolu', meta.github);
 check('meta.cv stays commented out', meta.cv === undefined, meta.cv);
 check('meta.status', /Fall 2027/.test(meta.status), meta.status);
-check('meta.clustrmaps', /clustrmaps\.com\/map_v2\.png/.test(meta.clustrmaps), meta.clustrmaps);
+check('meta.goatcounter', meta.goatcounter === 'https://yizhou.goatcounter.com/count', meta.goatcounter);
+check('meta.goatcounter_home', meta.goatcounter_home === 'https://yizhou.goatcounter.com', meta.goatcounter_home);
 
 /* ---- section inventory ---- */
 const types = sections.map(s => s.type).join(',');

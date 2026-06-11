@@ -28,6 +28,8 @@ email: you@example.com
 scholar: https://scholar.google.com/...
 github: https://github.com/...
 # cv: assets/cv/YizhouLu_CV.pdf  # 把 PDF 放进 assets/cv/ 后取消注释，CV 按钮自动出现
+goatcounter: https://yourname.goatcounter.com/count  # 可选：访客统计脚本
+goatcounter_home: https://yourname.goatcounter.com   # 可选：页脚访客计数链接
 ```
 
 `#` 开头的行是注释，会被忽略。
@@ -59,6 +61,7 @@ github: https://github.com/...
 - **加一篇论文**：复制 `## Publications` 里的注释模板改一改
 - **加一段经历**：在 `## Experience` 下复制一个 `###` 块
 - **启用 CV 按钮**：PDF 放入 `assets/cv/`，frontmatter 取消 `cv:` 注释
+- **启用 GoatCounter**：注册后填 `goatcounter:` 和 `goatcounter_home:`；如果 GoatCounter 后台允许 visitor counter，页脚会显示计数
 
 ## 技术说明
 
@@ -70,12 +73,12 @@ github: https://github.com/...
 | `assets/js/content.js` | Markdown 解析 + 渲染、机构 logo 暖白单色化（零依赖） |
 | `assets/js/constellation.js` | Hero 3D 星座 + 跑道叙事（名字退场 → 镜头推进 → 研究主题随旋转浮现，零依赖 Canvas） |
 | `assets/js/sky.js` | 全局星空背景 + 流星（零依赖 Canvas） |
-| `assets/js/motion.js` | 滚动动效与弹簧翻页（GSAP + ScrollTrigger + Lenis，CDN 加载失败时自动降级为静态页面） |
+| `assets/js/motion.js` | 自然平滑滚动、滚动揭示和微交互（GSAP + ScrollTrigger + Lenis，CDN 加载失败时自动降级为静态页面） |
 
 交互细节：
 
-- **弹簧翻页**：页面内容内自由滚动；滚过页面边缘进入"弹簧区"——拉得浅松手会弹回原页，拉得深则自动滑入下一页（hero 与 research 之间的弹簧滑动会完整播放 3D 过渡）；移动端使用原生 `scroll-snap`
-- **流星**：弹簧翻页时大概率划过一颗流星，平时也会偶发
+- **自然滚动**：桌面端使用 Lenis 做轻量平滑；不再强制 section snap 或弹簧翻页，hero → research 的 3D 叙事仍随滚动连续发生
+- **流星**：平时偶发，保留深空氛围但不绑定滚动跳页
 - 动效全部尊重系统的"减弱动态效果"设置；移动端自动关闭鼠标视差/倾斜效果
 
 测试：`node tests/parser.test.js`（解析器单测）；`node tests/verify.mjs`（无头浏览器冒烟，需先 `npm i --no-save playwright-core && npx playwright install chromium`）。
