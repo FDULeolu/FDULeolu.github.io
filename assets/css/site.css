@@ -633,25 +633,6 @@ body.no-research .hero {
   pointer-events: none;
 }
 
-.research-head {
-  position: absolute;
-  top: calc(var(--nav-h) + clamp(10px, 4vh, 42px));
-  left: 50%;
-  transform: translateX(-50%);
-  width: var(--w);
-  opacity: 0;
-  will-change: transform, opacity;
-}
-
-.research-head .section-head { margin-bottom: 14px; }
-
-.sky-intro {
-  font-family: var(--font-serif);
-  font-style: italic;
-  font-size: 1.05rem;
-  color: var(--text-3);
-}
-
 .topic-layer { position: absolute; inset: 0; }
 
 .topic-label {

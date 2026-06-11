@@ -48,6 +48,10 @@ const summary = await page.evaluate(`({
   cols: document.querySelectorAll('.col').length,
   topicLabels: document.querySelectorAll('#topicLayer .topic-label').length,
   topicLayer3d: !!document.querySelector('#topicLayer.is-3d'),
+  topicNodeCount: window.__topicNodeCount,
+  topicLinkCount: window.__topicLinkCount,
+  researchHead: !!document.getElementById('researchHead'),
+  aboutIndex: document.querySelector('#about .section-index')?.textContent,
   researchY: window.__researchY,
   heroCanvasPainted: ${painted('#heroCanvas')},
   skyCanvasPainted: ${painted('#skyCanvas')},
@@ -58,11 +62,15 @@ const summary = await page.evaluate(`({
 
 console.log(JSON.stringify(summary, null, 2));
 
-const expectedNav = 'Research,About,News,Education,Experience,Publications,Honors,Contact';
+const expectedNav = 'About,News,Education,Experience,Publications,Honors,Contact';
 if (summary.navLinks.join(',') !== expectedNav) errors.push('[nav] got: ' + summary.navLinks.join(','));
 if (summary.sections.length !== 7) errors.push('[sections] got ' + summary.sections.length);
 if (summary.topicLabels !== 6) errors.push('[research] topic labels: ' + summary.topicLabels);
 if (!summary.topicLayer3d) errors.push('[research] topic layer not bound to 3D engine');
+if (summary.topicNodeCount !== summary.topicLabels) errors.push('[research] topic nodes: ' + summary.topicNodeCount);
+if (summary.topicLinkCount < summary.topicLabels * 3) errors.push('[research] topic links: ' + summary.topicLinkCount);
+if (summary.researchHead) errors.push('[research] visible header still rendered');
+if (summary.aboutIndex !== '01') errors.push('[sections] about index: ' + summary.aboutIndex);
 if (typeof summary.researchY !== 'number') errors.push('[research] __researchY not published');
 if (!summary.skyCanvasPainted) errors.push('[sky] backdrop canvas not painted');
 
@@ -154,13 +162,6 @@ const anchorY = await page.evaluate(() => {
 });
 console.log('anchor scroll lands publications at top offset:', anchorY);
 if (Math.abs(anchorY) > 4) errors.push('[anchor] publications offset ' + anchorY);
-
-// the virtual research anchor in the nav
-await page.click('.nav-link[href="#research"]');
-await page.waitForTimeout(2200);
-const researchAnchorY = await page.evaluate(() => Math.round(window.scrollY));
-console.log('nav research lands at:', researchAnchorY, '(expect', s1.ry + ')');
-if (Math.abs(researchAnchorY - s1.ry) > 6) errors.push('[anchor] research landed at ' + researchAnchorY);
 
 // full page
 await page.evaluate(() => window.scrollTo(0, 0));

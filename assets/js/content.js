@@ -291,7 +291,9 @@
   function renderNav(meta, sections) {
     var navLinks = document.getElementById('navLinks');
     var menuLinks = document.getElementById('menuLinks');
-    var navable = sections.filter(function (s) { return s.directives.nav !== 'no'; });
+    var navable = sections.filter(function (s) {
+      return s.directives.nav !== 'no' && s.type !== 'constellation';
+    });
 
     navLinks.innerHTML = navable.map(function (s) {
       var label = s.directives.nav_label || s.title;
@@ -299,7 +301,7 @@
     }).join('');
 
     menuLinks.innerHTML = navable.map(function (s, i) {
-      var num = pad2(sections.indexOf(s) + 1);
+      var num = pad2(i + 1);
       var label = s.directives.nav_label || s.title;
       return '<a class="menu-link" href="#' + s.slug + '" style="--i:' + i + '">' +
         '<span class="menu-link-num">' + num + '</span>' + escapeHtml(label) + '</a>';
@@ -353,32 +355,19 @@
       '</section>';
   }
 
-  /* The constellation section renders into the hero stage overlay: the
-     3D engine (constellation.js) then carries the topics on anchor stars. */
-  function renderResearchOverlay(section, index) {
+  /* The constellation section renders only into the hero stage overlay; the
+     3D engine (constellation.js) then carries the topics on topic nodes. */
+  function renderResearchOverlay(section) {
     var overlay = document.getElementById('researchOverlay');
     if (!overlay) return;
 
     global.__constellationSlug = section.slug;
 
-    var intro = section.paragraphs.map(function (p) {
-      return '<p class="sky-intro">' + inline(p) + '</p>';
-    }).join('');
-
     var labels = section.bullets.map(function (b, i) {
       return '<span class="topic-label" data-topic="' + i + '">' + inline(b) + '</span>';
     }).join('');
 
-    overlay.innerHTML =
-      '<div class="research-head" id="researchHead">' +
-      '<div class="section-head">' +
-      '<span class="section-index">' + pad2(index + 1) + '</span>' +
-      '<h2 class="section-title">' + escapeHtml(section.title) + '</h2>' +
-      '<span class="section-rule"></span>' +
-      '</div>' +
-      intro +
-      '</div>' +
-      '<div class="topic-layer" id="topicLayer">' + labels + '</div>';
+    overlay.innerHTML = '<div class="topic-layer" id="topicLayer">' + labels + '</div>';
   }
 
   function renderAbout(section) {
@@ -544,11 +533,12 @@
 
   function renderSections(meta, sections) {
     var host = document.getElementById('sections');
-    var html = sections.map(function (section, i) {
+    var sectionIndex = 0;
+    var html = sections.map(function (section) {
       var body;
       switch (section.type) {
         case 'constellation':
-          renderResearchOverlay(section, i);
+          renderResearchOverlay(section);
           return '';
         case 'about': body = renderAbout(section); break;
         case 'news': body = renderNews(section); break;
@@ -558,7 +548,7 @@
         case 'contact': body = renderContact(section, meta); break;
         default: body = renderGeneric(section);
       }
-      return sectionShell(section, i, body);
+      return sectionShell(section, sectionIndex++, body);
     }).join('');
     host.innerHTML = html;
   }

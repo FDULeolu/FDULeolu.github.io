@@ -38,7 +38,7 @@ github: https://github.com/...
 
 | `@type` | 用途 | 写法 |
 |---|---|---|
-| `constellation` | 研究主题星座 | 每个 `- 主题` 绑定到 Hero 3D 星座的一颗锚定星上：滚动时名字退场、镜头推进星云，主题随星座旋转浮现/隐没 |
+| `constellation` | 研究主题星座 | 每个 `- 主题` 绑定到 Hero 3D 星座的一颗 topic node 上；该章节不显示 header、也不进入导航，导航从 About 开始 |
 | `about` | 自我介绍 | 普通段落；`> 引用` 会渲染成强调框；`@photo:` 指定照片 |
 | `news` | 动态列表 | `- **May 2026** — 内容`；`@visible: 5` 控制默认显示条数，其余折叠 |
 | `timeline` | 教育/经历 | `### 机构名` + `- logo:` `- role:` `- host:` `- period:`（logo 自动转成暖白单色；深色描边型徽标加 `- logo_mode: outline` 只保留深色笔画） |

@@ -6,9 +6,9 @@
    scroll (progress p = scrollY / travel):
 
      p 0.00–0.28   hero state: name + tagline over the slowly turning sky
-     p 0.28–0.66   handover: the text recedes, the camera dollies into the
-                   constellation, the "Research" header fades in
-     p 0.66–1.00   research state: topic labels ride their anchor stars,
+     p 0.28–0.66   handover: the text recedes and the camera dollies into the
+                   constellation
+     p 0.66–1.00   research state: topic labels ride their topic nodes,
                    appearing as they rotate to the front and dimming away
                    as they turn to the back
 
@@ -31,12 +31,11 @@
 
   var heroInner = document.getElementById('heroInner');
   var heroFoot = document.getElementById('heroFoot');
-  var researchHead = null;
 
   var W = 0, H = 0, R = 0, travel = 0;
   var points = [];
   var links = [];
-  var anchors = [];          // indices into points, one per topic label
+  var topicNodes = [];       // semantic constellation points, one per topic
   var labels = [];           // DOM elements
 
   var rotY = Math.random() * Math.PI * 2;
@@ -78,6 +77,7 @@
     var count = W < 720 ? 110 : 200;
     R = Math.max(W, H) * 0.5;
     points = [];
+    topicNodes = [];
 
     for (var i = 0; i < count; i++) {
       var u = Math.random() * 2 - 1;
@@ -90,92 +90,109 @@
         z: s * Math.sin(theta) * r,
         ember: Math.random() < 0.1,
         anchor: -1,
+        topic: false,
         ph: Math.random() * 6.2832,
         sp: 0.5 + Math.random() * 0.9,
         sx: 0, sy: 0, sc: 0, zz: 0
       });
     }
 
+    addTopicNodes();
+    buildLinks();
+  }
+
+  function addTopicNodes() {
+    var n = labels.length;
+    if (!n) {
+      global.__topicNodeCount = 0;
+      return;
+    }
+
+    var golden = Math.PI * (3 - Math.sqrt(5));
+    var shell = R * (W < 720 ? 0.38 : 0.42);
+    var phase = 0.45;
+
+    for (var i = 0; i < n; i++) {
+      var yNorm = n === 1 ? 0 : 1 - 2 * ((i + 0.5) / n);
+      var radial = Math.sqrt(Math.max(0, 1 - yNorm * yNorm));
+      var theta = i * golden + phase;
+      var pt = {
+        x: Math.cos(theta) * radial * shell * 0.86,
+        y: yNorm * shell * 0.56,
+        z: Math.sin(theta) * radial * shell * 0.86,
+        ember: true,
+        anchor: i,
+        topic: true,
+        ph: i * 1.37,
+        sp: 0.55 + (i % 4) * 0.12,
+        sx: 0, sy: 0, sc: 0, zz: 0,
+        pi: points.length
+      };
+      points.push(pt);
+      topicNodes.push(pt);
+    }
+
+    global.__topicNodeCount = topicNodes.length;
+  }
+
+  function buildLinks() {
     links = [];
+    var seen = {};
     var maxD = R * 0.36;
     var maxD2 = maxD * maxD;
-    for (var a = 0; a < count; a++) {
-      for (var b = a + 1; b < count; b++) {
+
+    function addLink(a, b, w, topicLink) {
+      if (a === b) return;
+      if (a > b) { var tmp = a; a = b; b = tmp; }
+      var key = a + '-' + b;
+      w = Math.max(0.12, Math.min(1, w));
+      if (seen[key]) {
+        seen[key].w = Math.max(seen[key].w, w);
+        seen[key].topic = seen[key].topic || !!topicLink;
+        return;
+      }
+      var link = { a: a, b: b, w: w, topic: !!topicLink };
+      seen[key] = link;
+      links.push(link);
+    }
+
+    for (var a = 0; a < points.length; a++) {
+      for (var b = a + 1; b < points.length; b++) {
         var dx = points[a].x - points[b].x;
         var dy = points[a].y - points[b].y;
         var dz = points[a].z - points[b].z;
         var d2 = dx * dx + dy * dy + dz * dz;
-        if (d2 < maxD2) links.push({ a: a, b: b, w: 1 - Math.sqrt(d2) / maxD });
+        if (d2 < maxD2) addLink(a, b, 1 - Math.sqrt(d2) / maxD, points[a].topic || points[b].topic);
       }
     }
 
-    pickAnchors();
+    connectTopicNodes(addLink);
+    global.__topicLinkCount = links.filter(function (L) { return L.topic; }).length;
   }
 
-  /* choose well-separated stars (greedy farthest-point) to carry the topics.
-     Candidates are limited to an inner cylinder so their projections stay
-     on screen through the whole rotation, even after the dolly zoom. */
-  function pickAnchors() {
-    anchors = [];
-    points.forEach(function (pt) { pt.anchor = -1; });
-    if (!labels.length || points.length < labels.length) return;
-
-    function candidates(rhoMax, yMax) {
-      var out = [];
+  function connectTopicNodes(addLink) {
+    topicNodes.forEach(function (node) {
+      var near = [];
       for (var i = 0; i < points.length; i++) {
-        var pt = points[i];
-        var rho = Math.sqrt(pt.x * pt.x + pt.z * pt.z);
-        if (rho <= rhoMax && Math.abs(pt.y) <= yMax) out.push(i);
+        var other = points[i];
+        if (other === node || other.topic) continue;
+        var dx = node.x - other.x;
+        var dy = node.y - other.y;
+        var dz = node.z - other.z;
+        near.push({ i: i, d: Math.sqrt(dx * dx + dy * dy + dz * dz) });
       }
-      return out;
-    }
-
-    // relax the cylinder until enough stars qualify
-    var rhoMax = W * 0.26;
-    var yMax = H * 0.27;
-    var pool = candidates(rhoMax, yMax);
-    var guard = 0;
-    while (pool.length < labels.length + 2 && guard < 8) {
-      rhoMax *= 1.25;
-      yMax *= 1.2;
-      pool = candidates(rhoMax, yMax);
-      guard++;
-    }
-    if (pool.length < labels.length) pool = points.map(function (_, i) { return i; });
-
-    function d2(a, b) {
-      var dx = a.x - b.x, dy = a.y - b.y, dz = a.z - b.z;
-      return dx * dx + dy * dy + dz * dz;
-    }
-
-    // start from the pool point farthest from the centre
-    var first = pool[0], best = -1;
-    pool.forEach(function (i) {
-      var pt = points[i];
-      var m = pt.x * pt.x + pt.y * pt.y + pt.z * pt.z;
-      if (m > best) { best = m; first = i; }
-    });
-    anchors.push(first);
-
-    while (anchors.length < labels.length) {
-      var pick = -1, pickDist = -1;
-      pool.forEach(function (c) {
-        if (anchors.indexOf(c) !== -1) return;
-        var minD = Infinity;
-        for (var k = 0; k < anchors.length; k++) {
-          var dd = d2(points[c], points[anchors[k]]);
-          if (dd < minD) minD = dd;
-        }
-        if (minD > pickDist) { pickDist = minD; pick = c; }
+      near.sort(function (a, b) { return a.d - b.d; });
+      near.slice(0, 3).forEach(function (hit) {
+        addLink(node.pi, hit.i, 0.9, true);
       });
-      if (pick === -1) break;
-      anchors.push(pick);
-    }
-
-    anchors.forEach(function (pi, k) {
-      points[pi].anchor = k;
-      points[pi].ember = true;
     });
+
+    if (topicNodes.length > 2) {
+      topicNodes.forEach(function (node, i) {
+        var next = topicNodes[(i + 1) % topicNodes.length];
+        addLink(node.pi, next.pi, 0.48, true);
+      });
+    }
   }
 
   /* --- geometry / runway --- */
@@ -223,8 +240,6 @@
 
     var textK = 1 - smoothstep(0.26, 0.5, p);
     var footK = 1 - smoothstep(0.06, 0.24, p);
-    var headK = smoothstep(0.48, 0.68, p);
-
     if (heroInner) {
       heroInner.style.opacity = textK.toFixed(3);
       heroInner.style.transform =
@@ -234,12 +249,6 @@
     }
     if (heroFoot && transitionsCleared) {
       heroFoot.style.opacity = footK.toFixed(3);
-    }
-    if (!researchHead) researchHead = document.getElementById('researchHead');
-    if (researchHead) {
-      researchHead.style.opacity = headK.toFixed(3);
-      researchHead.style.transform =
-        'translateX(-50%) translateY(' + ((1 - headK) * 26).toFixed(1) + 'px)';
     }
   }
 
@@ -300,10 +309,15 @@
       pa = points[L.a];
       pb = points[L.b];
       depth = Math.max(0, Math.min(1, ((pa.sc + pb.sc) / 2 - 0.52) / 0.5));
-      var alpha = L.w * 0.26 * depth * linkBoost;
+      var topicK = L.topic ? smoothstep(0.42, 0.72, p) : 0;
+      var alpha = L.topic
+        ? L.w * (0.2 + 0.28 * labelK) * Math.max(depth, 0.18) * linkBoost * topicK
+        : L.w * 0.26 * depth * linkBoost;
       if (alpha < 0.008) continue;
-      ctx.strokeStyle = 'rgba(216, 209, 198, ' + alpha.toFixed(3) + ')';
-      ctx.lineWidth = 1;
+      ctx.strokeStyle = L.topic
+        ? 'rgba(242, 168, 126, ' + alpha.toFixed(3) + ')'
+        : 'rgba(216, 209, 198, ' + alpha.toFixed(3) + ')';
+      ctx.lineWidth = L.topic ? 1.35 : 1;
       ctx.beginPath();
       ctx.moveTo(pa.sx, pa.sy);
       ctx.lineTo(pb.sx, pb.sy);
@@ -357,11 +371,11 @@
       }
     }
 
-    // topic labels ride their anchor stars: they surface as their star
+    // topic labels ride their own 3D topic nodes: they surface as the node
     // rotates to the front and melt away as it turns to the back
-    if (labels.length && anchors.length) {
-      for (i = 0; i < anchors.length && i < labels.length; i++) {
-        pnt = points[anchors[i]];
+    if (labels.length && topicNodes.length) {
+      for (i = 0; i < topicNodes.length && i < labels.length; i++) {
+        pnt = topicNodes[i];
         var f = clamp01(0.3 - pnt.zz / (R * 0.4));
         var edge =
           smoothstep(0.01 * W, 0.07 * W, pnt.sx) *
@@ -439,9 +453,8 @@
         ? Array.prototype.slice.call(layer.querySelectorAll('.topic-label'))
         : [];
       if (layer && labels.length) layer.classList.add('is-3d');
-      researchHead = document.getElementById('researchHead');
       travel = Math.max(0, hero.offsetHeight - stage.offsetHeight);
-      pickAnchors();
+      build();
       publishResearchY();
       domDirty = true;
       if (reduced) draw(performance.now(), true);
