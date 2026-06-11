@@ -322,11 +322,12 @@
     var counter = '';
     if (meta.goatcounter) {
       var counterHref = meta.goatcounter_home || meta.goatcounter.replace(/\/count\/?$/, '');
+      var counterPath = location.pathname + location.search || '/';
       counter =
-        '<a class="footer-counter" href="' + escapeHtml(counterHref) + '" target="_blank" rel="noopener">' +
+        '<a class="footer-counter" href="' + escapeHtml(counterHref) + '" target="_blank" rel="noopener" hidden ' +
+        'data-counter-url="' + escapeHtml(counterHref.replace(/\/$/, '') + '/counter/' + encodeURIComponent(counterPath) + '.json') + '">' +
         '<span class="footer-counter-label">Site visits</span>' +
-        '<img src="' + escapeHtml(counterHref.replace(/\/$/, '') + '/counter/' + encodeURIComponent(location.pathname || '/')) +
-        '.svg" alt="Visitor count" loading="lazy">' +
+        '<span class="footer-counter-value" aria-live="polite"></span>' +
         '</a>';
     }
     footer.innerHTML =
@@ -348,11 +349,29 @@
 
   function initFooterCounter() {
     var link = document.querySelector('.footer-counter');
-    var img = link && link.querySelector('img');
-    if (!link || !img) return;
-    img.addEventListener('load', function () { link.classList.add('is-loaded'); }, { once: true });
-    img.addEventListener('error', function () { link.hidden = true; }, { once: true });
-    if (img.complete && img.naturalWidth) link.classList.add('is-loaded');
+    var value = link && link.querySelector('.footer-counter-value');
+    if (!link || !value) return;
+
+    var url = link.getAttribute('data-counter-url');
+    if (!url || !global.fetch) return;
+
+    fetch(url, { cache: 'no-cache' })
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        var raw = data && (data.count || data.count_unique);
+        var count = Number(raw);
+        if (!Number.isFinite(count)) throw new Error('invalid count');
+
+        value.textContent = count.toLocaleString('en-US');
+        link.hidden = false;
+        requestAnimationFrame(function () { link.classList.add('is-loaded'); });
+      })
+      .catch(function () {
+        link.hidden = true;
+      });
   }
 
   /* ------------------------------------------------------------------ *

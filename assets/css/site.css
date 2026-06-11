@@ -1111,9 +1111,9 @@ body.no-research .hero {
 }
 
 .footer-counter {
-  display: none;
+  display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   font-family: var(--font-mono);
   font-size: 0.66rem;
   letter-spacing: 0.12em;
@@ -1121,11 +1121,22 @@ body.no-research .hero {
   color: var(--text-3);
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 9px 14px;
-  transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+  background: rgba(237, 234, 228, 0.025);
+  padding: 8px 12px 8px 14px;
+  opacity: 0;
+  transform: translateY(4px);
+  transition:
+    opacity 0.35s ease,
+    transform 0.35s var(--ease-out),
+    color 0.25s ease,
+    border-color 0.25s ease,
+    background 0.25s ease;
 }
 
-.footer-counter.is-loaded { display: inline-flex; }
+.footer-counter.is-loaded {
+  opacity: 1;
+  transform: translateY(0);
+}
 
 .footer-counter:hover {
   color: var(--accent-bright);
@@ -1133,12 +1144,22 @@ body.no-research .hero {
   background: var(--accent-wash);
 }
 
-.footer-counter img {
-  height: 14px;
-  width: auto;
-  max-width: 86px;
-  opacity: 0.78;
-  filter: invert(92%) sepia(8%) saturate(280%) hue-rotate(345deg);
+.footer-counter-label {
+  white-space: nowrap;
+}
+
+.footer-counter-value {
+  min-width: 2.2ch;
+  padding: 2px 7px;
+  border: 1px solid var(--accent-line);
+  border-radius: 999px;
+  background: rgba(224, 136, 86, 0.1);
+  color: var(--accent-bright);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
 }
 
 /* ---------- Loading / error states ---------- */
