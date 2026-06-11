@@ -1,58 +1,83 @@
-# 🚀 极简学术主页模板 (Minimal Academic Homepage)
+# Yizhou Lu — Personal Homepage
 
-这是一个基于 HTML/CSS 的极简学术主页模板，专为研究人员、学生和学者设计。它具有响应式设计、深色模式支持、优雅的排版以及易于定制的特点。
+深空暗色 + 3D 星座粒子 + 编辑部式排版的个人学术主页。
+**全站内容由一个 `content.md` 驱动**：改 Markdown，页面自动渲染，无需构建步骤，直接部署在 GitHub Pages。
 
-> [!TIP]
-> 如果你觉得这个模板对你有帮助，欢迎给一个 Star 🌟！
+## 本地预览
 
-## ✨ 特性
+内容通过 `fetch` 加载，需要一个本地服务器（直接双击 `index.html` 会因浏览器安全策略加载失败）：
 
-- **极简设计**：聚焦内容，去除冗余，参考了 [Claude.ai](https://claude.ai) 的视觉风格。
-- **响应式布局**：在手机、平板和桌面端都有良好的显示效果。
-- **深色模式**：支持手动切换和系统自动随动。
-- **学术友好**：内置教育背景、研究经历、项目展示、论文列表（支持图标链接）和获奖情况等板块。
-- **易于部署**：纯静态页面，无需任何构建步骤，直接托管在 GitHub Pages。
+- **方式一**：双击根目录的 `preview.command`（自动起服务并打开浏览器）
+- **方式二**：终端运行
 
-## 🛠️ 快速开始：定制你的主页
+```bash
+python3 -m http.server 4173
+# 然后访问 http://localhost:4173
+```
 
-你可以通过以下步骤快速创建属于自己的主页：
+## 怎么改内容（只需要编辑 `content.md`）
 
-### 1. Fork 本仓库
-点击仓库右上角的 **Fork** 按钮，将代码克隆到你自己的 GitHub 账号下。
+### 1. 站点配置（文件顶部 `---` 之间）
 
-### 2. 修改个人信息
-打开 `index.html` 文件，搜索并替换以下内容：
-- **基本信息**：姓名、邮箱、头像路径。
-- **社交链接**：修改 `social-icons` 部分的链接（GitHub, Google Scholar, LinkedIn 等）。
-- **板块内容**：
-  - `About Me`：简短的自我介绍。
-  - `Education`：替换学校 Logo 和学位信息。
-  - `Experience`：添加你的实习或研究经历。
-  - `Publications`：按照格式添加你的论文。
-  - `Awards`：列出你的荣誉。
+```yaml
+name: Yizhou Lu                  # 巨型标题 & 导航 monogram
+kicker: Undergraduate Researcher · ...   # 名字上方的小字
+tagline: Toward a *predictive* science ...  # 名字下方斜体句，*词* 会变成强调色
+status: Open to PhD positions · Fall 2027   # 状态胶囊（核心 CTA）
+email: you@example.com
+scholar: https://scholar.google.com/...
+github: https://github.com/...
+# cv: assets/cv/YizhouLu_CV.pdf  # 把 PDF 放进 assets/cv/ 后取消注释，CV 按钮自动出现
+keywords: A · B · C              # 跑马灯关键词，用 · 分隔
+```
 
-### 3. 替换资源文件
-- **头像**：将你的头像放入 `assets/img/` 并命名为 `avatar.png`。
-- **Logo**：将学校或机构的 Logo 放入 `assets/img/`。
-- **简历**：将你的 PDF 简历放入 `assets/cv/`。
+`#` 开头的行是注释，会被忽略。
 
-### 4. 开启 GitHub Pages
-在你的仓库设置中：
-1. 进入 `Settings` -> `Pages`。
-2. 在 `Build and deployment` 下，选择 `Deploy from a branch`。
-3. 选择 `main` 分支和 `/ (root)` 目录，点击 `Save`。
-4. 几分钟后，你的主页就会在 `https://<your-username>.github.io` 上线。
+### 2. 章节
 
-## 🎨 进阶定制
+每个 `## 标题` 是一个章节，`@type` 决定渲染样式：
 
-### 修改主题颜色
-如果你想修改主题色（如链接颜色、强调色），可以编辑 `assets/css/theme-claude.css`。
+| `@type` | 用途 | 写法 |
+|---|---|---|
+| `about` | 自我介绍 | 普通段落；`> 引用` 会渲染成强调框；`@photo:` 指定照片 |
+| `news` | 动态列表 | `- **May 2026** — 内容`；`@visible: 5` 控制默认显示条数，其余折叠 |
+| `timeline` | 教育/经历 | `### 机构名` + `- logo:` `- role:` `- host:` `- period:` |
+| `publications` | 论文 | `### 论文标题` + `- authors:` `- venue:` `- links:`；`@note:` 显示脚注 |
+| `columns` | 多栏（奖项/教学/服务） | 每个 `### 栏标题` 一栏，条目用 `- **主体** — 元信息`（`—` 后会渲染成小字） |
+| `contact` | 联系 | `@headline:` 大标语 + 一段正文，邮箱/链接自动从站点配置读取 |
 
-### 访客地图
-主页集成了 [ClustrMaps](https://clustrmaps.com/)。你可以去官网注册并获取你自己的地图 ID，然后替换 `index.html` 中 `updateMap` 函数里的相关参数。
+其他指令：`@nav: no`（不出现在导航栏）、`@id: xxx`（自定义锚点）。
 
-## 📄 许可证
-本项目采用 [MIT License](LICENSE.md) 开源。
+### 3. 行内语法
 
----
-由 [Yuheng Yang](https://github.com/wzsyyh) 维护。
+`**加粗**`、`*斜体*`、`` `代码` ``、`[文字](链接)`，注释用 `<!-- ... -->`。
+论文作者中的等贡献星号直接写 `*` 即可（如 `**Yizhou Lu***`），不会被误识别为斜体。
+
+### 4. 常见操作
+
+- **加一条 News**：在 `## News` 下加一行 `- **Month Year** — 内容`
+- **加一篇论文**：复制 `## Publications` 里的注释模板改一改
+- **加一段经历**：在 `## Experience` 下复制一个 `###` 块
+- **启用 CV 按钮**：PDF 放入 `assets/cv/`，frontmatter 取消 `cv:` 注释
+
+## 技术说明
+
+| 文件 | 职责 |
+|---|---|
+| `content.md` | 全站内容（你唯一需要日常编辑的文件） |
+| `index.html` | 静态骨架 + SEO meta |
+| `assets/css/site.css` | 设计系统（暗色主题、排版、响应式） |
+| `assets/js/content.js` | Markdown 解析 + 渲染（零依赖） |
+| `assets/js/constellation.js` | Hero 3D 星座粒子背景（零依赖 Canvas） |
+| `assets/js/motion.js` | 滚动动效（GSAP + ScrollTrigger + Lenis，CDN 加载失败时自动降级为静态页面） |
+
+动效全部尊重系统的"减弱动态效果"设置；移动端自动关闭鼠标视差/倾斜效果。
+
+## 部署
+
+推到 GitHub 即可（仓库 Settings → Pages → Deploy from a branch → `main` / root）。
+`.nojekyll` 已添加，跳过 Jekyll 构建。
+
+## License
+
+[MIT](LICENSE.md)

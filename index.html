@@ -2,536 +2,128 @@
 <html lang="en">
 
 <head>
-  <title>Yizhou Lu - Homepage</title>
-
   <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="Yizhou Lu is an undergraduate in Statistics at Fudan University working on machine learning, reinforcement learning, and the theory of foundation models.">
 
+  <title>Yizhou Lu — Researcher · Statistics @ Fudan University</title>
+  <meta name="description" content="Yizhou Lu is an undergraduate in Statistics at Fudan University working on machine learning, reinforcement learning, and the science of foundation models. Open to PhD positions for Fall 2027.">
   <meta name="keywords" content="Yizhou Lu, Fudan University, Statistics, Machine Learning, Reinforcement Learning, Foundation Models, LLM Reinforcement Learning, Agentic Systems">
+  <meta name="author" content="Yizhou Lu">
+  <link rel="canonical" href="https://fduleolu.github.io/">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <meta name="theme-color" content="#0B0A10">
 
-  <link rel="canonical" href="https://FDULeolu.github.io/" />
+  <!-- Open Graph / Twitter -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Yizhou Lu — Researcher">
+  <meta property="og:description" content="Toward a predictive science of foundation models. Statistics @ Fudan University · Open to PhD positions for Fall 2027.">
+  <meta property="og:url" content="https://fduleolu.github.io/">
+  <meta property="og:image" content="https://fduleolu.github.io/assets/img/personal_image.png">
+  <meta name="twitter:card" content="summary">
+
+  <!-- Structured data -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Yizhou Lu",
+    "url": "https://fduleolu.github.io/",
+    "email": "mailto:yizhoulu1112@gmail.com",
+    "affiliation": { "@type": "CollegeOrUniversity", "name": "Fudan University" },
+    "jobTitle": "Undergraduate Researcher",
+    "knowsAbout": ["Foundation Models", "Reinforcement Learning", "Conformal Prediction", "Statistics", "Machine Learning"],
+    "sameAs": [
+      "https://scholar.google.com/citations?hl=zh-CN&user=KKpXYUQAAAAJ",
+      "https://github.com/FDULeolu"
+    ]
+  }
+  </script>
 
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&amp;family=Instrument+Sans:wght@400;500;600;700&amp;family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap" rel="stylesheet">
 
-  <!-- Icons -->
-  <link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/academicons/1.8.6/css/academicons.min.css
-    integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin=anonymous>
-  <script src="https://kit.fontawesome.com/a860a211d3.js" crossorigin="anonymous"></script>
-
-  <!-- Base CSS (preserved) -->
-  <link rel="stylesheet" href="./assets/css/font_sans_serif.css">
-  <link rel="stylesheet" href="./assets/css/style-no-dark-mode_old.css">
-  <link rel="stylesheet" href="./assets/css/publications-no-dark-mode_old.css">
-
-  <!-- Theme CSS -->
-  <link rel="stylesheet" href="./assets/css/theme-claude.css">
-
+  <link rel="stylesheet" href="assets/css/site.css">
 </head>
 
-<body class="theme-claude">
+<body class="is-loading">
 
-  <!-- Top Navigation Bar -->
-  <nav class="top-nav">
-    <div class="nav-container">
-      <div class="nav-left">
-        <a href="/">Home</a>
-      </div>
-      <div class="nav-right">
-        <button id="themeToggle" class="theme-toggle" title="Toggle Dark Mode">
-          <i class="fa-solid fa-moon"></i>
-        </button>
-      </div>
+  <div class="grain" aria-hidden="true"></div>
+  <div class="progress-bar" aria-hidden="true"><span id="progressFill"></span></div>
+
+  <!-- Navigation -->
+  <header class="site-nav" id="siteNav">
+    <a class="nav-brand" href="#top" id="navBrand" aria-label="Back to top">YL<span class="brand-dot">.</span></a>
+    <nav class="nav-links" id="navLinks" aria-label="Sections"></nav>
+    <div class="nav-actions">
+      <a class="btn btn-accent nav-cv" id="navCv" target="_blank" rel="noopener" hidden>CV</a>
+      <button class="nav-burger" id="navBurger" aria-label="Open menu" aria-expanded="false" aria-controls="menuOverlay">
+        <span></span><span></span>
+      </button>
     </div>
-  </nav>
+  </header>
 
-  <div class="wrapper">
-    <!-- Sidebar / Header -->
-    <header class="sidebar">
-      <div class="profile-card">
-        <a class="image avatar"><img src="assets/img/personal_image.png" alt="Yizhou Lu" /></a>
-
-        <h1 class="site-name">Yizhou Lu</h1>
-
-        <p class="site-email">yizhoulu1112 [at] gmail.com</p>
-
-        <div class="social-icons">
-          <a href="mailto:yizhoulu1112@gmail.com" title="Email">
-            <i class="fa-solid fa-envelope"></i>
-          </a>
-          <a href="https://scholar.google.com/citations?hl=zh-CN&amp;user=KKpXYUQAAAAJ" title="Google Scholar">
-            <i class="ai ai-google-scholar"></i>
-          </a>
-          <a href="https://github.com/FDULeolu" title="GitHub">
-            <i class="fa-brands fa-github"></i>
-          </a>
-        </div>
-
-        <!-- Replace the ClustrMaps token and site link below with your own account values. -->
-        <div class="visitor-map sidebar-map">
-          <img id="clustrmap-sidebar" src="https://www.clustrmaps.com/map_v2.png?cl=c2714f&amp;w=240&amp;t=tt&amp;d=b62MJgfLx49SYGCjgV1xM7DswosPfq-0XClcoi4pyf0&amp;co=faf9f7&amp;ct=3d3929" alt="ClustrMaps" />
-        </div>
-
-      </div>
-    </header>
-
-    <!-- Main Content -->
-    <section class="content">
-
-      <!-- About Me -->
-      <div class="section" id="about-me">
-        <h3 class="section-title">About Me</h3>
-        <div class="section-body">
-          <p>I am a third-year undergraduate at Fudan University, majoring in Statistics. My earlier research was at the intersection of statistics and machine learning, focused on conformal prediction.</p>
-
-          <p>More rescently, my interests have broadened toward the science of foundation models. I hope to understand the phenomena that occur during the training and emergence of models in a scientific way (controled experiments/mathmetical framework).
-          Currently I'm working on adaptive computation, looped architectures, and what reinforcement learning actually does on top of pretrained priors. In the long run, I hope to help build a science of foundation models that produces rules we can predict with, not just descriptions that explain after the fact.</p>
-
-          <p>I am currently seeking a PhD position for Fall 2027. Please feel free to reach out by email if you are interested in my research or background.</p>
-
-          <p class="is-hidden"><strong><a href="assets/cv/YizhouLu_CV.pdf" target="_blank">Download my CV</a></strong></p>
-        </div>
-      </div>
-
-      <!-- News -->
-      <div class="section" id="news">
-        <h3 class="section-title">News</h3>
-        <div class="section-body">
-          <div class="news-list">
-            <article class="news-item">
-              <p class="news-date">May 2026</p>
-              <p class="news-text">I was invited as a reviewer for <a href="https://ai4math2026.github.io/">AI4Math Workshop, ICML 2026</a>!</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">May 2026</p>
-              <p class="news-text">I was invited to participate the 2026 Open Day event of the <a href="https://collegeai.tsinghua.edu.cn/">College of Artificial Intelligence</a>, the <a href="https://www.stat.tsinghua.edu.cn/">Department of Statistics and Data Science</a>, and the <a href="https://iiis.tsinghua.edu.cn/">Institute for Interdisciplinary Information Sciences</a> at Tsinghua University!</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">May 2026</p>
-              <p class="news-text">One new preprint on the <a href="https://arxiv.org/abs/2605.00347">training VLM with long-horizon RL on video games</a> is now available on arXiv.</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">May 2026</p>
-              <p class="news-text">One paper is accepted to ICML 2026!</p>
-            </article>
-            <article class="news-item">
-              <p class="news-date">February 2026</p>
-              <p class="news-text">Our new preprint on the <a href="https://arxiv.org/abs/2601.21455">coverage-length metric of conformal prediction</a> is now available on arXiv.</p>
-            </article>
-            <div class="news-older" id="olderNews" hidden>
-              <article class="news-item">
-                <p class="news-date">December 2025</p>
-                <p class="news-text">I was honored to receive the <strong>Zheng Zukang Scholarship</strong>.</p>
-              </article>
-              <article class="news-item">
-                <p class="news-date">October 2025</p>
-                <p class="news-text">I was honored to receive the <strong>National Scholarship</strong>.</p>
-              </article>
-              <article class="news-item">
-                <p class="news-date">September 2025</p>
-                <p class="news-text">Our new preprint on the <a href="https://arxiv.org/abs/2509.22529">interpretability of conformal prediction</a> is now available on arXiv.</p>
-              </article>
-              <article class="news-item">
-                <p class="news-date">June 2025</p>
-                <p class="news-text">One paper was accepted by ICML 2025 Workshop.</p>
-              </article>
-              <!-- <article class="news-item">
-                <p class="news-date">December 2024</p>
-                <p class="news-text">I am going to visit <a href="https://people.iiis.tsinghua.edu.cn/~yuanyang/en.html">Yang Yuan</a> at THU IIIS.</p>
-              </article>
-              <article class="news-item">
-                <p class="news-date">April 2024</p>
-                <p class="news-text">I started my research supervised by <a href="https://www.tengjiaye.com/">Jiaye Teng</a>.</p>
-              </article> -->
-            </div>
-            <button class="news-toggle" type="button" aria-expanded="false" aria-controls="olderNews">
-              <span class="news-toggle-text">View older updates</span>
-              <i class="fa-solid fa-chevron-down" aria-hidden="true"></i>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Education -->
-      <div class="section" id="education">
-        <h3 class="section-title">Education</h3>
-        <div class="section-body">
-          <div class="card">
-            <div class="experience-item">
-              <img src="assets/img/fdu_logo.png" alt="Fudan University logo" class="institution-logo institution-adaptive-logo" loading="lazy">
-              <div class="experience-content">
-                <p class="exp-title"><strong>Department of Statistics and Data Science, Fudan University</strong></p>
-                <p class="exp-detail">BSc in Statistics, Zhuoyan Honor Program</p>
-                <p class="exp-period">Expected 2027</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Experience -->
-      <div class="section" id="experience">
-        <h3 class="section-title">Experience</h3>
-        <div class="section-body">
-
-          <div class="card timeline-item">
-            <div class="experience-item">
-              <img src="assets/img/princeton-university-seeklogo.png" alt="Princeton University logo" class="institution-logo institution-threshold-logo" loading="lazy">
-              <div class="experience-content">
-                <p class="exp-title"><strong>Princeton Language Intelligence, Princeton University</strong></p>
-                <p class="exp-detail">Research Intern, focus on agentic reinforcement learning & VLM</p>
-                <p class="exp-detail"><em>Hosts:</em> <a href="https://sites.google.com/view/cjin/home?authuser=0">Prof. <strong>Chi Jin</strong></a> and <a href="https://chengshuai-shi.github.io/"><strong>Chengshuai Shi</strong></a></p>
-                <p class="exp-period">January 2026 - Present</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card timeline-item">
-            <div class="experience-item">
-              <img src="assets/img/thu_logo.png" alt="Tsinghua University logo" class="institution-logo institution-adaptive-logo" loading="lazy">
-              <div class="experience-content">
-                <p class="exp-title"><strong>Institute for Interdisciplinary Information Sciences, Tsinghua University</strong></p>
-                <p class="exp-detail">Research Intern, focus on looped transformer & adaptive computing</p>
-                <p class="exp-detail"><em>Host:</em> <a href="https://sites.google.com/view/jingzhao/home">Prof. <strong>Jingzhao Zhang</strong></a></p>
-                <p class="exp-period">December 2025 - Present</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card timeline-item">
-            <div class="experience-item">
-              <img
-                id="shlab-logo"
-                src="assets/img/ailab_logo.webp"
-                alt="Shanghai Artificial Intelligence Laboratory official logo"
-                class="institution-logo institution-wide-logo"
-                loading="lazy"
-                referrerpolicy="no-referrer">
-              <div class="experience-content">
-                <p class="exp-title"><strong>Big AI Dream Lab, Shanghai AI Laboratory</strong></p>
-                <p class="exp-detail">Research Intern, focus on LLM post-train & formal language (Dafny)</p>
-                <p class="exp-detail"><em>Host:</em> <a href="https://bigaidream.github.io/"><strong>Jie Fu</strong></a></p>
-                <p class="exp-period">July 2025 - October 2025</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="card timeline-item">
-            <div class="experience-item">
-              <img src="assets/img/sufe_logo.png" alt="Shanghai University of Finance and Economics logo" class="institution-logo institution-adaptive-logo" loading="lazy">
-              <div class="experience-content">
-                <p class="exp-title"><strong>School of Statistics and Data Science, Shanghai University of Finance and Economics</strong></p>
-                <p class="exp-detail">Research Assistant, focus on conformal prediction</p>
-                <p class="exp-detail"><em>Host:</em> <a href="https://www.tengjiaye.com/">Prof. <strong>Jiaye Teng</strong></a></p>
-                <p class="exp-period">April 2024 - Present</p>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Publications -->
-      <div class="section" id="publications">
-        <h3 class="section-title">Publications</h3>
-        <div class="section-body">
-          <p class="section-note">* denotes equal contribution.</p>
-          <div class="publications">
-            <ol class="bibliography">
-              <li>
-                <div class="pub-row">
-                  <div class="pub-content">
-                    <div class="title">Odysseus: Scaling VLMs to 100+ Turn Decision-Making in Games via Reinforcement Learning</div>
-                    <div class="author">Chengshuai Shi*, Wenzhe Li*, Xinran Liang*, <strong>Yizhou Lu</strong>, Wenjia Yang, Ruirong Feng, Seth Karten,
-                      Ziran Yang, Zihan Ding, Gabriel Sarch, Danqi Chen, Karthik Narasimhan, Chi Jin</div>
-                    <div class="periodical"><em><strong>arXiv</strong></em></div>
-                    <div class="links">
-                      <a href="https://arxiv.org/abs/2605.00347">Paper</a>
-                      <a href="https://odysseus-project.github.io/">Website</a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="pub-row">
-                  <div class="pub-content">
-                    <div class="title">Questioning the Coverage-Length Metric in Conformal Prediction: When Shorter Intervals Are Not Better</div>
-                    <div class="author">Yizhou Min*, <strong>Yizhou Lu*</strong>, Lanqi Li*, Zhen Zhang, Jiaye Teng</div>
-                    <div class="periodical"><em><strong>ICML 2026 Poster</strong></em></div>
-                    <div class="links">
-                      <a href="https://arxiv.org/abs/2601.21455">Paper</a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <li>
-                <div class="pub-row">
-                  <div class="pub-content">
-                    <div class="title">Smoothing-Based Conformal Prediction for Balancing Efficiency and Interpretability</div>
-                    <div class="author">Mingyi Zheng*, Hongyu Jiang*, <strong>Yizhou Lu*</strong>, Jiaye Teng</div>
-                    <div class="periodical"><em><strong>ICML 2025 NewInML Workshop</strong></em></div>
-                    <div class="links">
-                      <a href="https://arxiv.org/abs/2509.22529">Paper</a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-
-              <!--
-              Publication template:
-              <li>
-                <div class="pub-row">
-                  <div class="pub-content">
-                    <div class="title">Paper Title</div>
-                    <div class="author"><strong>Yizhou Lu</strong>, Coauthor A, Coauthor B</div>
-                    <div class="periodical"><em><strong>Venue / Status</strong></em></div>
-                    <div class="links">
-                      <a href="https://example.com">Paper</a>
-                      <a href="https://github.com/example">Code</a>
-                      <a href="https://example.com/project">Project</a>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              -->
-            </ol>
-          </div>
-        </div>
-      </div>
-
-      <!-- Awards -->
-      <div class="section" id="awards">
-        <h3 class="section-title">Awards</h3>
-        <div class="section-body">
-          <div class="awards-grid">
-            <div class="award-item">
-              <span class="award-icon">🏅</span>
-              <div class="award-text"><strong>Zheng Zukang Scholarship</strong>, Fudan University <span class="award-meta">2024 - 2025, Top 1%</span></div>
-            </div>
-            <div class="award-item">
-              <span class="award-icon">🏅</span>
-              <div class="award-text"><strong>National Scholarship</strong>, Fudan University <span class="award-meta">2024 - 2025, Top 1%</span></div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Teaching -->
-      <div class="section" id="teaching">
-        <h3 class="section-title">Teaching</h3>
-        <div class="section-body">
-          <div class="card timeline-item">
-            <div class="experience-item no-logo">
-              <div class="experience-content">
-                <p class="teaching-course">Optimization Methods and Applications</p>
-                <p class="exp-detail"><strong>Teaching Assistant</strong> · School of Management, Fudan University</p>
-                <p class="exp-period">Fall 2025</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Service -->
-      <div class="section" id="service">
-        <h3 class="section-title">Service</h3>
-        <div class="section-body">
-          <div class="card timeline-item">
-            <div class="experience-item no-logo">
-              <div class="experience-content">
-                <p class="exp-title"><strong><a href="https://ai4math2026.github.io/">AI for Math Workshop, ICML 2026</a></strong></p>
-                <p class="exp-detail">Reviewer</p>
-                <p class="exp-period">2026.5</p>
-              </div>
-            </div>
-          </div>
-          <div class="card timeline-item">
-            <div class="experience-item no-logo">
-              <div class="experience-content">
-                <p class="exp-title"><strong><a href="http://www.faic.cc/">Conference on the Fundamentals of Artificial Intelligence</a></strong></p>
-                <p class="exp-detail">Volunteer</p>
-                <p class="exp-period">2026.4, Shanghai</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </section>
-
-    <footer class="site-footer">
-      <p>&copy; 2026 Yizhou Lu. All rights reserved.</p>
-    </footer>
+  <!-- Full-screen menu (mobile) -->
+  <div class="menu-overlay" id="menuOverlay" hidden>
+    <nav class="menu-links" id="menuLinks" aria-label="Sections"></nav>
+    <div class="menu-foot" id="menuFoot"></div>
   </div>
 
-  <script src="./assets/js/scale.fix.js"></script>
-  <script>
-    (function() {
-      // Theme Management
-      const themeToggle = document.getElementById('themeToggle');
-      const icon = themeToggle.querySelector('i');
+  <main id="top">
 
-      function restoreOriginalLogo(img) {
-        const original = img.dataset.originalSrc || img.getAttribute('src');
-        img.dataset.originalSrc = original;
-        if (img.getAttribute('src') !== original) {
-          img.src = original;
-        }
-      }
+    <!-- Hero -->
+    <section class="hero" id="hero">
+      <canvas id="heroCanvas" aria-hidden="true"></canvas>
+      <div class="hero-vignette" aria-hidden="true"></div>
 
-      function buildThresholdLogo(img, isDark) {
-        const original = img.dataset.originalSrc || img.getAttribute('src');
-        img.dataset.originalSrc = original;
+      <div class="hero-inner">
+        <p class="hero-kicker" id="heroKicker"></p>
+        <h1 class="hero-name" id="heroName"></h1>
+        <p class="hero-tagline" id="heroTagline"></p>
+        <div class="hero-meta" id="heroMeta"></div>
+      </div>
 
-        if (!isDark) {
-          restoreOriginalLogo(img);
-          return;
-        }
+      <div class="hero-foot" aria-hidden="true">
+        <div class="scroll-cue">
+          <span class="scroll-cue-label">Scroll</span>
+          <span class="scroll-cue-line"><i></i></span>
+        </div>
+      </div>
+    </section>
 
-        if (img.dataset.darkProcessedSrc) {
-          img.src = img.dataset.darkProcessedSrc;
-          return;
-        }
+    <!-- Keyword marquee -->
+    <div class="marquee" id="marquee" aria-hidden="true">
+      <div class="marquee-track" id="marqueeTrack"></div>
+    </div>
 
-        const source = new Image();
-        source.onload = function() {
-          const canvas = document.createElement('canvas');
-          canvas.width = source.naturalWidth;
-          canvas.height = source.naturalHeight;
+    <!-- Sections rendered from content.md -->
+    <div id="sections"></div>
 
-          const ctx = canvas.getContext('2d');
-          ctx.drawImage(source, 0, 0);
+  </main>
 
-          const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-          const pixels = imageData.data;
+  <footer class="site-footer" id="siteFooter"></footer>
 
-          for (let i = 0; i < pixels.length; i += 4) {
-            const r = pixels[i];
-            const g = pixels[i + 1];
-            const b = pixels[i + 2];
-            const a = pixels[i + 3];
-            const luminance = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-            const keep = a > 0 && luminance < 95;
+  <noscript>
+    <div class="noscript-box">
+      <h1>Yizhou Lu</h1>
+      <p>This page renders its content with JavaScript. Please enable JavaScript, or reach me directly:</p>
+      <p>
+        <a href="mailto:yizhoulu1112@gmail.com">yizhoulu1112@gmail.com</a> ·
+        <a href="https://scholar.google.com/citations?hl=zh-CN&amp;user=KKpXYUQAAAAJ">Google Scholar</a> ·
+        <a href="https://github.com/FDULeolu">GitHub</a>
+      </p>
+    </div>
+  </noscript>
 
-            pixels[i] = 255;
-            pixels[i + 1] = 255;
-            pixels[i + 2] = 255;
-            pixels[i + 3] = keep ? a : 0;
-          }
+  <!-- Motion libraries (progressive enhancement — page works without them) -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/ScrollTrigger.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.11/dist/lenis.min.js"></script>
 
-          ctx.putImageData(imageData, 0, 0);
-          img.dataset.darkProcessedSrc = canvas.toDataURL('image/png');
-
-          if (document.documentElement.getAttribute('data-theme') === 'dark') {
-            img.src = img.dataset.darkProcessedSrc;
-          }
-        };
-
-        source.src = original;
-      }
-
-      function updateCustomLogos(isDark) {
-        document.querySelectorAll('.institution-threshold-logo').forEach(function(img) {
-          buildThresholdLogo(img, isDark);
-        });
-      }
-      
-      // Function to update map based on current theme
-      function updateMap(isDark) {
-        const MAP_BASE = 'https://www.clustrmaps.com/map_v2.png?w=240&t=tt&d=b62MJgfLx49SYGCjgV1xM7DswosPfq-0XClcoi4pyf0';
-        const co = isDark ? '1a1917' : 'faf9f7';
-        const cl = isDark ? 'e28a67' : 'c2714f';
-        const ct = isDark ? 'd1cec7' : '3d3929';
-        
-        const img = document.getElementById('clustrmap-sidebar');
-        if (img) {
-          img.src = MAP_BASE + '&cl=' + cl + '&co=' + co + '&ct=' + ct;
-          // 确保图片被包裹在链接中
-          if (!img.parentElement || img.parentElement.tagName !== 'A') {
-            const link = document.createElement('a');
-            link.href = 'https://clustrmaps.com/site/1c9oh';
-            link.title = 'ClustrMaps';
-            img.parentNode.insertBefore(link, img);
-            link.appendChild(img);
-          }
-        }
-      }
-
-      function setTheme(isDark) {
-        if (isDark) {
-          document.documentElement.setAttribute('data-theme', 'dark');
-          icon.classList.replace('fa-moon', 'fa-sun');
-          localStorage.setItem('theme', 'dark');
-        } else {
-          document.documentElement.setAttribute('data-theme', 'light');
-          icon.classList.replace('fa-sun', 'fa-moon');
-          localStorage.setItem('theme', 'light');
-        }
-        updateCustomLogos(isDark);
-        updateMap(isDark);
-      }
-
-      // Initial theme setup
-      const savedTheme = localStorage.getItem('theme');
-      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-      
-      if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-        setTheme(true);
-      } else {
-        setTheme(false);
-      }
-
-      themeToggle.addEventListener('click', () => {
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        setTheme(!isDark);
-      });
-
-      // Listen for system theme changes if no saved preference
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
-        if (!localStorage.getItem('theme')) {
-          setTheme(e.matches);
-        }
-      });
-
-      const newsToggle = document.querySelector('.news-toggle');
-      const olderNews = document.getElementById('olderNews');
-
-      if (newsToggle && olderNews) {
-        const toggleText = newsToggle.querySelector('.news-toggle-text');
-
-        newsToggle.addEventListener('click', function() {
-          const isExpanded = newsToggle.getAttribute('aria-expanded') === 'true';
-          newsToggle.setAttribute('aria-expanded', String(!isExpanded));
-          olderNews.hidden = isExpanded;
-          if (toggleText) {
-            toggleText.textContent = isExpanded ? 'View older updates' : 'Hide older updates';
-          }
-        });
-      }
-
-      // Intersection Observer for fade-in animations
-      if ('IntersectionObserver' in window) {
-        var observer = new IntersectionObserver(function(entries) {
-          entries.forEach(function(entry) {
-            if (entry.isIntersecting) {
-              entry.target.classList.add('visible');
-              observer.unobserve(entry.target);
-            }
-          });
-        }, { threshold: 0.1 });
-
-        document.querySelectorAll('.section').forEach(function(el) {
-          observer.observe(el);
-        });
-      }
-    })();
-  </script>
+  <script src="assets/js/constellation.js"></script>
+  <script src="assets/js/motion.js"></script>
+  <script src="assets/js/content.js"></script>
 
 </body>
 
