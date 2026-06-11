@@ -31,24 +31,57 @@
     update();
   }
 
+  /* scroll-position based so the research stop on the hero runway can be
+     a "virtual" nav target */
   function initScrollSpy() {
-    if (!('IntersectionObserver' in window)) return;
-    var sections = document.querySelectorAll('#sections section[id]');
-    if (!sections.length) return;
+    var pts = [];
+    var ticking = false;
+    var current = '';
 
-    var setActive = function (id) {
+    function compute() {
+      pts = [];
+      var vh = window.innerHeight;
+      var y = window.scrollY || 0;
+      if (typeof global.__researchY === 'number') {
+        pts.push({ id: global.__constellationSlug || 'research', y: global.__researchY * 0.45 });
+      }
+      document.querySelectorAll('#sections section[id]').forEach(function (s) {
+        pts.push({ id: s.id, y: s.getBoundingClientRect().top + y - vh * 0.55 });
+      });
+      pts.sort(function (a, b) { return a.y - b.y; });
+    }
+
+    function update() {
+      ticking = false;
+      var y = window.scrollY || 0;
+      var active = '';
+      for (var i = 0; i < pts.length; i++) {
+        if (y >= pts[i].y) active = pts[i].id;
+      }
+      if (active === current) return;
+      current = active;
       document.querySelectorAll('.nav-link').forEach(function (a) {
-        a.classList.toggle('is-active', a.getAttribute('href') === '#' + id);
+        a.classList.toggle('is-active', !!active && a.getAttribute('href') === '#' + active);
       });
-    };
+    }
 
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (entry) {
-        if (entry.isIntersecting) setActive(entry.target.id);
-      });
-    }, { rootMargin: '-40% 0px -55% 0px', threshold: 0 });
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; requestAnimationFrame(update); }
+    }, { passive: true });
 
-    sections.forEach(function (s) { io.observe(s); });
+    var rt = 0;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(function () { compute(); update(); }, 200);
+    }, { passive: true });
+
+    if (hasGsap) global.ScrollTrigger.addEventListener('refresh', compute);
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function () { compute(); update(); });
+    }
+
+    compute();
+    update();
   }
 
   /* ------------------------------------------------------------------ *
@@ -56,16 +89,136 @@
    * ------------------------------------------------------------------ */
 
   function initLenis() {
-    if (!global.Lenis || reduced || coarse) return;
+    if (!global.Lenis || reduced || coarse) return null;
     try {
       var lenis = new global.Lenis({ lerp: 0.115, smoothWheel: true });
       global.__lenis = lenis;
       lenis.on('scroll', global.ScrollTrigger.update);
       gsap.ticker.add(function (time) { lenis.raf(time * 1000); });
       gsap.ticker.lagSmoothing(0);
+      return lenis;
     } catch (e) {
       console.warn('[motion] lenis init failed:', e);
+      return null;
     }
+  }
+
+  /* ------------------------------------------------------------------ *
+   *  Spring paging                                                      *
+   *  Inside a page's content you scroll freely. Past its edge you enter *
+   *  a spring zone: release with little penetration and you bounce back *
+   *  to the edge; pull deep enough and the page springs to the next.    *
+   * ------------------------------------------------------------------ */
+
+  function initSpring(lenis) {
+    if (!lenis) return;
+
+    var zones = [];          // { A, B } — spring gaps between page rest points
+    var dir = 1;
+    var springing = false;
+    var pointerDown = false;
+    var idleTimer = 0;
+
+    var RELEASE = 0.22;      // idle penetration that commits to the next page
+    var EARLY = 0.55;        // penetration that commits while still moving
+
+    function compute() {
+      var vh = window.innerHeight;
+      var y = window.scrollY || 0;
+      var max = Math.max(0, document.documentElement.scrollHeight - vh);
+      var items = [{ rest: 0, end: 0 }];
+
+      if (typeof global.__researchY === 'number') {
+        items.push({ rest: global.__researchY, end: global.__researchY });
+      }
+
+      document.querySelectorAll('#sections .section').forEach(function (s) {
+        var top = Math.round(s.getBoundingClientRect().top + y);
+        items.push({ rest: top, end: top + Math.max(0, s.offsetHeight - vh) });
+      });
+      items.push({ rest: max, end: max });
+
+      items.sort(function (a, b) { return a.rest - b.rest; });
+
+      zones = [];
+      for (var i = 0; i < items.length - 1; i++) {
+        var A = Math.min(items[i].end, items[i + 1].rest);
+        var B = items[i + 1].rest;
+        if (B - A > 24) zones.push({ A: A, B: B });
+      }
+    }
+
+    function findZone(y) {
+      for (var i = 0; i < zones.length; i++) {
+        if (y > zones[i].A + 2 && y < zones[i].B - 2) return zones[i];
+      }
+      return null;
+    }
+
+    function go(target, bounce) {
+      springing = true;
+      if (!bounce && global.SiteSky) global.SiteSky.meteorMaybe();
+      lenis.scrollTo(target, {
+        duration: bounce ? 0.85 : 1.25,
+        easing: bounce
+          ? function (t) { var s = 1.4; t -= 1; return 1 + t * t * ((s + 1) * t + s); }
+          : function (t) { return 1 - Math.pow(1 - t, 3.6); },
+        onComplete: function () { springing = false; }
+      });
+    }
+
+    function settle() {
+      if (springing || pointerDown || document.hidden) return;
+      var y = window.scrollY || 0;
+      var z = findZone(y);
+      if (!z) return;
+      var len = z.B - z.A;
+      var pen = dir > 0 ? (y - z.A) / len : (z.B - y) / len;
+      if (pen >= RELEASE) go(dir > 0 ? z.B : z.A, false);
+      else go(dir > 0 ? z.A : z.B, true);
+    }
+
+    lenis.on('scroll', function (e) {
+      var v = e && typeof e.velocity === 'number' ? e.velocity : 0;
+      if (v > 0.05) dir = 1;
+      else if (v < -0.05) dir = -1;
+      if (springing) return;
+
+      // deep pull while slowing → commit early (feels like the spring lets go)
+      if (Math.abs(v) < 45 && !pointerDown) {
+        var y = window.scrollY || 0;
+        var z = findZone(y);
+        if (z) {
+          var len = z.B - z.A;
+          var pen = dir > 0 ? (y - z.A) / len : (z.B - y) / len;
+          if (pen >= EARLY) {
+            clearTimeout(idleTimer);
+            go(dir > 0 ? z.B : z.A, false);
+            return;
+          }
+        }
+      }
+
+      clearTimeout(idleTimer);
+      idleTimer = setTimeout(settle, 140);
+    });
+
+    ['wheel', 'touchmove', 'keydown'].forEach(function (ev) {
+      window.addEventListener(ev, function () {
+        // user input takes over from an in-flight spring
+        springing = false;
+      }, { passive: true });
+    });
+    window.addEventListener('pointerdown', function () { pointerDown = true; }, { passive: true });
+    window.addEventListener('pointerup', function () { pointerDown = false; }, { passive: true });
+
+    compute();
+    global.ScrollTrigger.addEventListener('refresh', compute);
+    var rt = 0;
+    window.addEventListener('resize', function () {
+      clearTimeout(rt);
+      rt = setTimeout(compute, 180);
+    }, { passive: true });
   }
 
   /* ------------------------------------------------------------------ *
@@ -103,20 +256,7 @@
 
   function initScrollEffects() {
     var ScrollTrigger = global.ScrollTrigger;
-
-    // hero content drifts up & fades as you leave it
-    gsap.to('.hero-inner', {
-      yPercent: -16,
-      opacity: 0.15,
-      ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom 25%', scrub: true }
-    });
-
-    gsap.to('.hero-foot', {
-      opacity: 0,
-      ease: 'none',
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: '18% top', scrub: true }
-    });
+    // (the hero runway morph is driven directly by constellation.js)
 
     // top progress bar
     var fill = document.getElementById('progressFill');
@@ -248,9 +388,10 @@
       }
 
       document.body.classList.add('has-motion');
-      initLenis();
+      var lenis = initLenis();
       setInitialStates();
       initScrollEffects();
+      initSpring(lenis);
       initTilt();
       initMagnetic();
     },

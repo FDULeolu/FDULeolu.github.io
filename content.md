@@ -12,11 +12,22 @@ scholar: https://scholar.google.com/citations?hl=zh-CN&user=KKpXYUQAAAAJ
 github: https://github.com/FDULeolu
 # Drop your PDF into assets/cv/ and uncomment the line below to enable CV buttons.
 # cv: assets/cv/YizhouLu_CV.pdf
-keywords: Foundation Models · Adaptive Computation · Looped Architectures · Reinforcement Learning · Conformal Prediction · Agentic Systems
 footer: © 2026 Yizhou Lu. All rights reserved.
 clustrmaps: https://www.clustrmaps.com/map_v2.png?cl=e28a67&w=240&t=tt&d=b62MJgfLx49SYGCjgV1xM7DswosPfq-0XClcoi4pyf0&co=141318&ct=d1cec7
 clustrmaps_link: https://clustrmaps.com/site/1c9oh
 ---
+
+## Research
+@type: constellation
+
+The questions I keep returning to.
+
+- Foundation Models
+- Adaptive Computation
+- Looped Architectures
+- Reinforcement Learning
+- Conformal Prediction
+- Agentic Systems
 
 ## About
 @type: about
@@ -50,7 +61,6 @@ More recently, my interests have broadened toward the science of foundation mode
 
 ## Education
 @type: timeline
-@nav: no
 
 ### Department of Statistics and Data Science, Fudan University
 - logo: assets/img/fdu_logo.png
@@ -62,6 +72,7 @@ More recently, my interests have broadened toward the science of foundation mode
 
 ### Princeton Language Intelligence, Princeton University
 - logo: assets/img/princeton-university-seeklogo.png
+- logo_mode: outline
 - role: Research Intern, focus on agentic reinforcement learning & VLM
 - host: *Hosts:* [Prof. **Chi Jin**](https://sites.google.com/view/cjin/home?authuser=0) and [**Chengshuai Shi**](https://chengshuai-shi.github.io/)
 - period: January 2026 – Present
@@ -114,6 +125,7 @@ Publication template — copy, paste, edit:
 
 ## Honors & Service
 @type: columns
+@nav_label: Honors
 
 ### Awards
 - **Zheng Zukang Scholarship**, Fudan University — 2024 – 2025 · Top 1%

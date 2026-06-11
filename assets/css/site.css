@@ -70,7 +70,13 @@ a { color: inherit; text-decoration: none; }
 
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 2px; }
 
-section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
+main, .site-footer { position: relative; z-index: 1; }
+
+/* Native section snapping on touch devices (desktop uses the Lenis-based snap) */
+@media (pointer: coarse) and (prefers-reduced-motion: no-preference) {
+  html { scroll-snap-type: y proximity; }
+  .hero, .section { scroll-snap-align: start; }
+}
 
 .mono-label {
   font-family: var(--font-mono);
@@ -104,6 +110,15 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 .col-main a:hover {
   color: var(--accent-bright);
   text-decoration-color: var(--accent-bright);
+}
+
+/* ---------- Global night sky backdrop ---------- */
+
+.sky-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
 }
 
 /* ---------- Film grain ---------- */
@@ -337,12 +352,26 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 
 .menu-overlay.is-open .menu-foot { opacity: 1; transform: translateY(0); }
 
-/* ---------- Hero ---------- */
+/* ---------- Hero runway ---------- */
 
+/* The hero is a tall scroll runway; the stage stays stuck while the
+   hero text hands over to the research constellation. */
 .hero {
   position: relative;
-  min-height: 100vh;
-  min-height: 100svh;
+  height: 240vh;
+  height: 240svh;
+}
+
+body.no-research .hero {
+  height: 100vh;
+  height: 100svh;
+}
+
+.hero-stage {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
   display: grid;
   place-items: center;
   overflow: hidden;
@@ -370,6 +399,7 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   text-align: center;
   padding: 96px 24px 24px;
   max-width: 1100px;
+  will-change: transform, opacity;
 }
 
 .hero-kicker {
@@ -526,54 +556,16 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   100% { transform: scaleY(0); transform-origin: bottom center; }
 }
 
-/* ---------- Marquee ---------- */
-
-.marquee {
-  position: relative;
-  border-top: 1px solid var(--line);
-  border-bottom: 1px solid var(--line);
-  padding: 17px 0;
-  overflow: hidden;
-  background: rgba(18, 16, 23, 0.45);
-}
-
-.marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-  animation: marquee 42s linear infinite;
-}
-
-.marquee:hover .marquee-track { animation-play-state: paused; }
-
-.marquee-seq {
-  display: flex;
-  align-items: center;
-  flex: none;
-}
-
-.marquee-item {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--text-3);
-  white-space: nowrap;
-  padding: 0 26px;
-}
-
-.marquee-sep { color: var(--accent); font-size: 0.6rem; }
-
-@keyframes marquee {
-  from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
-}
-
 /* ---------- Section scaffold ---------- */
 
 .section {
   position: relative;
-  padding: clamp(88px, 13vh, 150px) 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 100vh;
+  min-height: 100svh;
+  padding: clamp(84px, 11vh, 130px) 0;
   overflow: hidden;
 }
 
@@ -630,6 +622,67 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   height: 1px;
   background: var(--line-strong);
   transform-origin: left center;
+}
+
+/* ---------- Research overlay (inside the hero stage) ---------- */
+
+.research-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.research-head {
+  position: absolute;
+  top: calc(var(--nav-h) + clamp(10px, 4vh, 42px));
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--w);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.research-head .section-head { margin-bottom: 14px; }
+
+.sky-intro {
+  font-family: var(--font-serif);
+  font-style: italic;
+  font-size: 1.05rem;
+  color: var(--text-3);
+}
+
+.topic-layer { position: absolute; inset: 0; }
+
+.topic-label {
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-family: var(--font-mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  color: var(--text);
+  text-shadow: 0 0 16px rgba(242, 168, 126, 0.3), 0 2px 12px rgba(11, 10, 16, 0.8);
+  opacity: 0;
+  visibility: hidden;
+  will-change: transform, opacity;
+}
+
+/* labels only become visible once the 3D engine drives them */
+.topic-layer.is-3d .topic-label { visibility: visible; }
+
+@media (max-width: 640px) {
+  .topic-label {
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
+    white-space: normal;
+    width: max-content;
+    max-width: 118px;
+    text-align: center;
+    line-height: 1.5;
+  }
 }
 
 /* ---------- About ---------- */
@@ -795,7 +848,31 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
   place-items: center;
   border: 1px solid rgba(237, 234, 228, 0.16);
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-  transition: transform 0.35s var(--ease-out), box-shadow 0.35s ease;
+  transition: transform 0.35s var(--ease-out), box-shadow 0.35s ease, background 0.4s ease, border-color 0.4s ease;
+}
+
+/* once the logo has been converted to a warm-white mono mark */
+.tl-logo.is-dark {
+  background: rgba(237, 234, 228, 0.045);
+  border-color: var(--line-strong);
+  box-shadow: none;
+}
+
+.tl-logo.is-dark img {
+  opacity: 0.88;
+  transition: opacity 0.3s ease, filter 0.3s ease;
+}
+
+@media (hover: hover) {
+  .tl-item:hover .tl-logo.is-dark {
+    border-color: var(--accent-line);
+    background: var(--accent-wash);
+  }
+
+  .tl-item:hover .tl-logo.is-dark img {
+    opacity: 1;
+    filter: drop-shadow(0 0 10px rgba(242, 168, 126, 0.35));
+  }
 }
 
 @media (hover: hover) {
@@ -1070,13 +1147,12 @@ section[id] { scroll-margin-top: calc(var(--nav-h) + 8px); }
 
 /* ---------- Loading / error states ---------- */
 
-.hero-inner, .hero-foot, .marquee, #sections, .site-footer {
+.hero-inner, .hero-foot, #sections, .site-footer {
   transition: opacity 0.7s ease;
 }
 
 body.is-loading .hero-inner,
 body.is-loading .hero-foot,
-body.is-loading .marquee,
 body.is-loading #sections,
 body.is-loading .site-footer {
   opacity: 0;
@@ -1128,7 +1204,7 @@ body.has-motion .hero-inner { transition: none; opacity: 1; }
   .cols { grid-template-columns: 1fr 1fr; }
 }
 
-@media (max-width: 860px) {
+@media (max-width: 940px) {
   .nav-links { display: none; }
   .nav-burger { display: block; }
   .nav-cv { display: none; }
@@ -1165,7 +1241,6 @@ body.has-motion .hero-inner { transition: none; opacity: 1; }
     transition-duration: 0.001s !important;
   }
 
-  .marquee-track { animation: none; transform: none; }
   .scroll-cue-line i { animation: none; transform: scaleY(1); }
   .status-pill .dot { animation: none; }
 }

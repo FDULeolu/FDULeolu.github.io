@@ -288,37 +288,21 @@
     brand.innerHTML = escapeHtml(initials) + '<span class="brand-dot">.</span>';
   }
 
-  function renderMarquee(meta) {
-    var track = document.getElementById('marqueeTrack');
-    var words = (meta.keywords || '').split('·').map(function (w) { return w.trim(); }).filter(Boolean);
-    if (!words.length) {
-      document.getElementById('marquee').style.display = 'none';
-      return;
-    }
-    var seq = '';
-    for (var r = 0; r < 3; r++) {
-      words.forEach(function (w) {
-        seq += '<span class="marquee-item">' + escapeHtml(w) + '</span><span class="marquee-sep">◆</span>';
-      });
-    }
-    track.innerHTML =
-      '<div class="marquee-seq">' + seq + '</div>' +
-      '<div class="marquee-seq">' + seq + '</div>';
-  }
-
   function renderNav(meta, sections) {
     var navLinks = document.getElementById('navLinks');
     var menuLinks = document.getElementById('menuLinks');
     var navable = sections.filter(function (s) { return s.directives.nav !== 'no'; });
 
     navLinks.innerHTML = navable.map(function (s) {
-      return '<a class="nav-link" href="#' + s.slug + '">' + escapeHtml(s.title) + '</a>';
+      var label = s.directives.nav_label || s.title;
+      return '<a class="nav-link" href="#' + s.slug + '">' + escapeHtml(label) + '</a>';
     }).join('');
 
     menuLinks.innerHTML = navable.map(function (s, i) {
       var num = pad2(sections.indexOf(s) + 1);
+      var label = s.directives.nav_label || s.title;
       return '<a class="menu-link" href="#' + s.slug + '" style="--i:' + i + '">' +
-        '<span class="menu-link-num">' + num + '</span>' + escapeHtml(s.title) + '</a>';
+        '<span class="menu-link-num">' + num + '</span>' + escapeHtml(label) + '</a>';
     }).join('');
 
     document.getElementById('menuFoot').innerHTML = socialLinks(meta);
@@ -367,6 +351,34 @@
       '<div class="section-body">' + bodyHtml + '</div>' +
       '</div>' +
       '</section>';
+  }
+
+  /* The constellation section renders into the hero stage overlay: the
+     3D engine (constellation.js) then carries the topics on anchor stars. */
+  function renderResearchOverlay(section, index) {
+    var overlay = document.getElementById('researchOverlay');
+    if (!overlay) return;
+
+    global.__constellationSlug = section.slug;
+
+    var intro = section.paragraphs.map(function (p) {
+      return '<p class="sky-intro">' + inline(p) + '</p>';
+    }).join('');
+
+    var labels = section.bullets.map(function (b, i) {
+      return '<span class="topic-label" data-topic="' + i + '">' + inline(b) + '</span>';
+    }).join('');
+
+    overlay.innerHTML =
+      '<div class="research-head" id="researchHead">' +
+      '<div class="section-head">' +
+      '<span class="section-index">' + pad2(index + 1) + '</span>' +
+      '<h2 class="section-title">' + escapeHtml(section.title) + '</h2>' +
+      '<span class="section-rule"></span>' +
+      '</div>' +
+      intro +
+      '</div>' +
+      '<div class="topic-layer" id="topicLayer">' + labels + '</div>';
   }
 
   function renderAbout(section) {
@@ -430,7 +442,9 @@
   function renderTimeline(section) {
     var items = section.items.map(function (it) {
       var logo = it.props.logo
-        ? '<div class="tl-logo"><img src="' + escapeHtml(it.props.logo) + '" alt="" loading="lazy"></div>'
+        ? '<div class="tl-logo"><img src="' + escapeHtml(it.props.logo) + '" alt=""' +
+          (it.props.logo_mode ? ' data-logo-mode="' + escapeHtml(it.props.logo_mode) + '"' : '') +
+          ' loading="lazy"></div>'
         : '<div class="tl-logo tl-logo--ghost" aria-hidden="true">' + escapeHtml(it.title.charAt(0)) + '</div>';
 
       var rows = '';
@@ -533,6 +547,9 @@
     var html = sections.map(function (section, i) {
       var body;
       switch (section.type) {
+        case 'constellation':
+          renderResearchOverlay(section, i);
+          return '';
         case 'about': body = renderAbout(section); break;
         case 'news': body = renderNews(section); break;
         case 'timeline': body = renderTimeline(section); break;
@@ -544,6 +561,58 @@
       return sectionShell(section, i, body);
     }).join('');
     host.innerHTML = html;
+  }
+
+  /* ------------------------------------------------------------------ *
+   *  Institution logos → warm-white mono marks (canvas luminance matte) *
+   * ------------------------------------------------------------------ */
+
+  function whitenLogo(img) {
+    if (img.dataset.mono) return;
+    try {
+      var c = document.createElement('canvas');
+      c.width = img.naturalWidth;
+      c.height = img.naturalHeight;
+      if (!c.width || !c.height) return;
+      var x = c.getContext('2d');
+      x.drawImage(img, 0, 0);
+      var data = x.getImageData(0, 0, c.width, c.height);
+      var px = data.data;
+
+      // default mode: drop only near-white pixels (backgrounds, knockout
+      // details), everything else becomes warm white.
+      // outline mode (e.g. Princeton): keep only the DARK strokes — colored
+      // fills go transparent too, leaving a clean white line-art mark.
+      var outline = img.dataset.logoMode === 'outline';
+      var cut = outline ? 135 : 232;
+      var ramp = outline ? 40 : 50;
+
+      for (var i = 0; i < px.length; i += 4) {
+        var a = px[i + 3];
+        if (!a) continue;
+        var lum = 0.2126 * px[i] + 0.7152 * px[i + 1] + 0.0722 * px[i + 2];
+        var keep = lum >= cut ? 0 : lum > cut - ramp ? (cut - lum) / ramp : 1;
+        px[i] = 245; px[i + 1] = 242; px[i + 2] = 235;
+        px[i + 3] = Math.round(a * keep);
+      }
+      x.putImageData(data, 0, 0);
+      img.dataset.mono = '1';
+      img.src = c.toDataURL('image/png');
+      var chip = img.closest('.tl-logo');
+      if (chip) chip.classList.add('is-dark');
+    } catch (e) {
+      /* tainted canvas or decode failure: keep the original logo */
+    }
+  }
+
+  function whitenLogos() {
+    document.querySelectorAll('.tl-logo img').forEach(function (img) {
+      if (img.complete && img.naturalWidth) {
+        whitenLogo(img);
+      } else {
+        img.addEventListener('load', function () { whitenLogo(img); }, { once: true });
+      }
+    });
   }
 
   /* ------------------------------------------------------------------ *
@@ -645,12 +714,22 @@
       var a = e.target.closest('a[href^="#"]');
       if (!a) return;
       var id = a.getAttribute('href').slice(1);
+
+      // virtual anchors (e.g. the research stop on the hero runway)
+      var overrides = global.__anchorOverrides;
+      if (overrides && id in overrides && typeof overrides[id] === 'number') {
+        e.preventDefault();
+        if (global.__lenis) global.__lenis.scrollTo(overrides[id], { duration: 1.3 });
+        else global.scrollTo({ top: overrides[id], behavior: 'smooth' });
+        return;
+      }
+
       var target = id ? document.getElementById(id) : document.body;
       if (!target && id !== 'top') return;
       e.preventDefault();
       var dest = id === 'top' ? 0 : target;
       if (global.__lenis) {
-        global.__lenis.scrollTo(dest, { offset: id === 'top' ? 0 : -84, duration: 1.2 });
+        global.__lenis.scrollTo(dest, { duration: 1.2 });
       } else if (dest === 0) {
         global.scrollTo({ top: 0, behavior: 'smooth' });
       } else {
@@ -684,17 +763,22 @@
     var sections = parsed.sections;
 
     renderHero(meta);
-    renderMarquee(meta);
     renderNav(meta, sections);
     renderSections(meta, sections);
     renderFooter(meta);
 
+    // collapse the hero runway when no constellation section exists
+    var hasResearch = sections.some(function (s) { return s.type === 'constellation'; });
+    if (!hasResearch) document.body.classList.add('no-research');
+
+    whitenLogos();
     initNewsToggle();
     initCopyEmail();
     initMenu();
     initAnchors();
 
-    // Hand over to the motion layer (no-op if GSAP failed to load)
+    // bind topics to the 3D constellation, then hand over to the motion layer
+    if (global.HeroConstellation) global.HeroConstellation.bindTopics();
     if (global.SiteMotion) global.SiteMotion.init();
 
     requestAnimationFrame(function () {

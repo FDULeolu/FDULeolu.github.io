@@ -28,7 +28,6 @@ email: you@example.com
 scholar: https://scholar.google.com/...
 github: https://github.com/...
 # cv: assets/cv/YizhouLu_CV.pdf  # 把 PDF 放进 assets/cv/ 后取消注释，CV 按钮自动出现
-keywords: A · B · C              # 跑马灯关键词，用 · 分隔
 ```
 
 `#` 开头的行是注释，会被忽略。
@@ -39,14 +38,15 @@ keywords: A · B · C              # 跑马灯关键词，用 · 分隔
 
 | `@type` | 用途 | 写法 |
 |---|---|---|
+| `constellation` | 研究主题星座 | 每个 `- 主题` 绑定到 Hero 3D 星座的一颗锚定星上：滚动时名字退场、镜头推进星云，主题随星座旋转浮现/隐没 |
 | `about` | 自我介绍 | 普通段落；`> 引用` 会渲染成强调框；`@photo:` 指定照片 |
 | `news` | 动态列表 | `- **May 2026** — 内容`；`@visible: 5` 控制默认显示条数，其余折叠 |
-| `timeline` | 教育/经历 | `### 机构名` + `- logo:` `- role:` `- host:` `- period:` |
+| `timeline` | 教育/经历 | `### 机构名` + `- logo:` `- role:` `- host:` `- period:`（logo 自动转成暖白单色；深色描边型徽标加 `- logo_mode: outline` 只保留深色笔画） |
 | `publications` | 论文 | `### 论文标题` + `- authors:` `- venue:` `- links:`；`@note:` 显示脚注 |
 | `columns` | 多栏（奖项/教学/服务） | 每个 `### 栏标题` 一栏，条目用 `- **主体** — 元信息`（`—` 后会渲染成小字） |
 | `contact` | 联系 | `@headline:` 大标语 + 一段正文，邮箱/链接自动从站点配置读取 |
 
-其他指令：`@nav: no`（不出现在导航栏）、`@id: xxx`（自定义锚点）。
+其他指令：`@nav: no`（不出现在导航栏）、`@nav_label: 短名`（导航栏显示更短的名字）、`@id: xxx`（自定义锚点）。
 
 ### 3. 行内语法
 
@@ -67,11 +67,18 @@ keywords: A · B · C              # 跑马灯关键词，用 · 分隔
 | `content.md` | 全站内容（你唯一需要日常编辑的文件） |
 | `index.html` | 静态骨架 + SEO meta |
 | `assets/css/site.css` | 设计系统（暗色主题、排版、响应式） |
-| `assets/js/content.js` | Markdown 解析 + 渲染（零依赖） |
-| `assets/js/constellation.js` | Hero 3D 星座粒子背景（零依赖 Canvas） |
-| `assets/js/motion.js` | 滚动动效（GSAP + ScrollTrigger + Lenis，CDN 加载失败时自动降级为静态页面） |
+| `assets/js/content.js` | Markdown 解析 + 渲染、机构 logo 暖白单色化（零依赖） |
+| `assets/js/constellation.js` | Hero 3D 星座 + 跑道叙事（名字退场 → 镜头推进 → 研究主题随旋转浮现，零依赖 Canvas） |
+| `assets/js/sky.js` | 全局星空背景 + 流星（零依赖 Canvas） |
+| `assets/js/motion.js` | 滚动动效与弹簧翻页（GSAP + ScrollTrigger + Lenis，CDN 加载失败时自动降级为静态页面） |
 
-动效全部尊重系统的"减弱动态效果"设置；移动端自动关闭鼠标视差/倾斜效果。
+交互细节：
+
+- **弹簧翻页**：页面内容内自由滚动；滚过页面边缘进入"弹簧区"——拉得浅松手会弹回原页，拉得深则自动滑入下一页（hero 与 research 之间的弹簧滑动会完整播放 3D 过渡）；移动端使用原生 `scroll-snap`
+- **流星**：弹簧翻页时大概率划过一颗流星，平时也会偶发
+- 动效全部尊重系统的"减弱动态效果"设置；移动端自动关闭鼠标视差/倾斜效果
+
+测试：`node tests/parser.test.js`（解析器单测）；`node tests/verify.mjs`（无头浏览器冒烟，需先 `npm i --no-save playwright-core && npx playwright install chromium`）。
 
 ## 部署
 
